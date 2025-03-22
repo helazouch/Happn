@@ -1,0 +1,89 @@
+/* EventCard.css */
+.event-card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .event-card {
+    margin-top:2%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+  }
+  
+  .event-image {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .event-details {
+    flex: 1;
+    margin-left: 16px;
+  }
+  
+  .event-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #242565;
+  }
+  
+  .event-client {
+    color: #555;
+  }
+  
+  .event-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .accept-button {
+    color: green;
+    /* color: #242565; */
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .reject-button {
+    color: red;
+    /* color: #242565; */
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+  }
+  
+  .modal-image {
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 8px;
+  }
+  

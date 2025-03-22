@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';
+import './Statistics.css';
 import Navbar from './components/Navbar';
 import Notifications from './components/Notifications';
 import AxesSelector from './components/AxesSelector';

@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from 'C:/Users/user/Desktop/HappnProject/Happn/src/PresentationLayer/admin/App.tsx';
+import Statistics from './PresentationLayer/admin/Statistics';
 import './index.css';
+import ClientFile from './PresentationLayer/admin/ClientFile';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
-
+    <Statistics/>
+    <ClientFile></ClientFile>
   </React.StrictMode>
 );
