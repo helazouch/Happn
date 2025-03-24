@@ -1,0 +1,92 @@
+body {
+    font-family: 'DM Sans', sans-serif;
+    color: black;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+.main-content3 {
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex: 1 1 1;
+    background-color: aqua;
+    justify-content: space-around;
+}
+.main-content31{
+    flex:1;
+    padding: 20px;
+}
+.main-content32{
+    flex:1;
+    padding: 20px;
+}
+.main-content33{
+    flex:1;
+    padding: 20px;
+}
+.form-section {
+    margin-bottom: 20px;
+}
+
+.form-section-h2 {
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #ff007f;
+}
+
+input[type="text"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.upload-button {
+    padding: 10px 20px;
+    background-color: #ff007f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.upload-button:hover {
+    background-color: #e60073;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    background-color: #ff007f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: block;
+    margin: 20px auto;
+}
+
+.submit-button:hover {
+    background-color: #e60073;
+}
+
+description-textarea3 {
+    width: 100%;
+    
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    resize: vertical; /* Permet à l'utilisateur de redimensionner verticalement */
+    min-height: 300px;
+    font-family: 'DM Sans ';
+
+}

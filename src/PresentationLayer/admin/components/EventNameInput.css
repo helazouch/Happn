@@ -1,0 +1,36 @@
+.event-name-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.event-name-input {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 450px;
+    height:30px;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    font-size: 16px;
+    padding-left: 30px;
+    padding-right:160px;
+}
+
+.next-button {
+    padding: 10px 20px;
+    background-color: #ff007f;
+    width: 130px;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.6);
+    margin-top:-8.5%;
+    margin-left: 78%;
+}
+
+.next-button:hover {
+    background-color: #ff007f;
+}
