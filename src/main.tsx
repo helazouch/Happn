@@ -1,22 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import { eventCreationRouter } from "./RoutingLayer/navigation/EventCreationRoutes";
 import "./index.css";
-import AddEvent21 from "./PresentationLayer/admin/AddEvent21";
-import TestAddEvent from "./PresentationLayer/admin/TestAddEvent";
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AddEvent21 />
-    <TestAddEvent />
+    <RouterProvider router={eventCreationRouter} />
   </React.StrictMode>
 );
-// import React from "react";
-// import ReactDOM from "react-dom/client";
-// import TestAddEvent from "./PresentationLayer/admin/TestAddEvent";
-// import "./index.css";
-
-// ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-//   <React.StrictMode>
-//
-//   </React.StrictMode>
-// );
