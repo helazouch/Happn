@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
+import ConfirmationModal from "./ConfirmationModal";
 import "./AddEvent3.css";
+import "./ConfirmationModal.css";
 
 const AddEvent3: React.FC = () => {
   const [place, setPlace] = useState<string>("");
@@ -10,6 +12,8 @@ const AddEvent3: React.FC = () => {
   const [price, setPrice] = useState<number>(250);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePlaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPlace(event.target.value);
@@ -48,13 +52,42 @@ const AddEvent3: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Place:", place);
-    console.log("Date:", date);
-    console.log("Capacity:", capacity);
-    console.log("Price:", price);
-    console.log("Description:", description);
-    console.log("Selected Categories:", selectedCategories);
-    console.log("File:", file?.name);
+    setShowModal(true);
+  };
+
+  const handleConfirm = async () => {
+    setIsSubmitting(true);
+    try {
+      // Ici vous mettrez votre vrai logique de soumission
+      console.log("Données soumises:", {
+        place,
+        date,
+        capacity,
+        price,
+        description,
+        selectedCategories,
+        file
+      });
+      
+      // Simulation d'une requête API (2 secondes)
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      console.log("Événement créé avec succès!");
+      setShowModal(false);
+      
+      // Réinitialiser le formulaire si besoin
+      // setPlace("");
+      // setDescription("");
+      // etc...
+    } catch (error) {
+      console.error("Erreur:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
   };
 
   return (
@@ -172,6 +205,21 @@ const AddEvent3: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de confirmation */}
+      <ConfirmationModal
+        show={showModal}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        formData={{
+          place,
+          date,
+          capacity,
+          price,
+          selectedCategories
+        }}
+        isLoading={isSubmitting}
+      />
     </div>
   );
 };
