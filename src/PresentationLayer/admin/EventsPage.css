@@ -1,0 +1,87 @@
+.events-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #F5F5F5;
+  }
+  
+  .events-layout {
+    display: flex;
+    margin-top: 20px;
+    gap: 20px;
+    padding: 0 20px;
+  }
+  
+  .filters {
+    flex: 0 0 250px;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    padding-right: 20px;
+    position: relative;
+  }
+  
+  .filters::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ED4690, #5522CC);
+    border-radius: 2px;
+  }
+  
+  .events-content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .events-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px; /* Increased gap between cards */
+    justify-content: center;
+  }
+  
+  .add-event-btn {
+    display: block;
+    margin: 40px auto; /* Increased margin for more space above and below the button */
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #3D37F1;
+    border: 2px solid #3D37F1;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .add-event-btn:hover {
+    background-color: #3D37F1;
+    color: white;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    .events-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .events-container {
+      grid-template-columns: 1fr;
+    }
+  
+    .filters::after {
+      display: none;
+    }
+  }
