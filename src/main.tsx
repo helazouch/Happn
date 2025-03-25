@@ -5,9 +5,10 @@ import "./index.css";
 import ClientFile from "./PresentationLayer/admin/ClientFile";
 import EventsPage from "./PresentationLayer/admin/EventsPage";
 import AddEvent3 from "./PresentationLayer/admin/AddEvent3";
+import ParticipantProfile from "./PresentationLayer/participant/ParticipantProfile/ParticipantProfile";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     {/* <EventsPage></EventsPage> */}
-  <AddEvent3></AddEvent3>
+    <ParticipantProfile></ParticipantProfile>
   </React.StrictMode>
 );
