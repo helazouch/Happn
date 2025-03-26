@@ -58,5 +58,15 @@ export const EventRepository = {
       id_event: doc.id,
       ...doc.data()
     } as Event));
+  },
+  async nameExists(name: string): Promise<boolean> {
+    try {
+      const q = query(eventsCol, where("name", "==", name));
+      const querySnapshot = await getDocs(q);
+      return !querySnapshot.empty;
+    } catch (error) {
+      console.error("Error checking event name:", error);
+      throw error;
+    }
   }
 };
