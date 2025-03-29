@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import ConfirmationModal from "./ConfirmationModal";
-import { EventService } from "../../ServiceLayer/eventManagement/EventService";
+// import { EventService } from "../../ServiceLayer/eventManagement/EventService";
 import { FirebaseService } from "../../ServiceLayer/firebase/FirebaseService";
 import { useNavigationServiceAdminNavBar } from "../../RoutingLayer/navigation/NavigationServiceAdminNavBar";
 
@@ -105,9 +105,9 @@ const AddEvent3: React.FC = () => {
       };
       
       // Appel au service
-      const { eventId, versionId } = await EventService.createEventWithVersion(eventData, versionData);
+      // const { eventId, versionId } = await EventService.createEventWithVersion(eventData, versionData);
 
-    console.log("Événement créé avec succès, ID : ", eventId, " Version ID : ", versionId);
+    // console.log("Événement créé avec succès, ID : ", eventId, " Version ID : ", versionId);
 
       navigation.goToEvents();
     } catch (err) {
