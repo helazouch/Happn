@@ -272,7 +272,7 @@ const AddEvent3: React.FC = () => {
           <button
             onClick={handleModalSubmit}
             disabled={isSubmitting || !date || !place}
-            className={`finish-button ${isSubmitting ? "submitting" : ""}`}
+            className="finish-button3"
           >
             {isSubmitting ? (
               <>
@@ -280,7 +280,7 @@ const AddEvent3: React.FC = () => {
                 Creating...
               </>
             ) : (
-              "Finish Creation"
+              "Finish"
             )}
           </button>
         </div>

@@ -104,3 +104,7 @@
     border-color: #ffb8d3;
     cursor: not-allowed;
   }
+  .dem-message strong {
+    color: #ff6b9d; /* Couleur rose pour le nom */
+    font-weight: 600;
+  }

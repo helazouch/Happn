@@ -54,9 +54,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             </span>
           </div>
         </div>
-        <div className="modal-message">
-          Oops! Looks like this event already exists. Want to add the next version?
-        </div>
         <div className="modal-buttons">
           <button
             className="confirm-button"

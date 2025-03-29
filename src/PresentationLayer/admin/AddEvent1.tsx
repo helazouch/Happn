@@ -4,11 +4,17 @@ import EventNameInput from "./components/EventNameInput";
 import { useNavigate } from "react-router-dom";
 import { EventRepository } from "../../DataLayer/repositories/EventRepository";
 import "./AddEvent1.css";
+import DuplicateEventModal from "./DuplicateEventModal";
 
 const AddEvent1: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [duplicateModalState, setDuplicateModalState] = useState({
+    show: false,
+    eventName: ""
+  });  
+  const [existingEventName, setExistingEventName] = useState("");
 
   const handleNameSubmit = async (name: string): Promise<boolean> => {
     if (!name.trim()) {
@@ -22,7 +28,11 @@ const AddEvent1: React.FC = () => {
     try {
       const exists = await EventRepository.nameExists(name);
       if (exists) {
-        setError("An event with this name already exists");
+        setExistingEventName(name);
+        setDuplicateModalState({
+          show: true,
+          eventName: name
+        });
         return false;
       }
       sessionStorage.setItem("newEventName", name);
@@ -37,10 +47,27 @@ const AddEvent1: React.FC = () => {
     }
   };
 
+  const handleCreateNewVersion = () => {
+    sessionStorage.setItem("newEventName", existingEventName);
+    setDuplicateModalState({
+      show: false,
+      eventName: ""
+    });
+    navigate("/events/new/details");
+  };
+
+  const handleCancelNewVersion = () => {
+    setDuplicateModalState({
+      show: false,
+      eventName: ""
+    });
+    setExistingEventName("");
+  };
+
   return (
-    <div>
+    <div className="main-content">
       <Navbar />
-      <div className="main-content1">
+      <div className="main-content11">
         <p id="textAddEvent1">New event, new stories to tell..</p>
         <EventNameInput
           onSubmit={handleNameSubmit}
@@ -49,6 +76,15 @@ const AddEvent1: React.FC = () => {
           isLoading={isLoading}
         />
       </div>
+
+      {/* Ajout de la modale de duplication */}
+      <DuplicateEventModal
+        show={duplicateModalState.show}
+        onYes={handleCreateNewVersion}
+        onNo={handleCancelNewVersion}
+        isLoading={isLoading}
+        eventName={existingEventName} // Passez le nom de l'événement ici
+      />
     </div>
   );
 };

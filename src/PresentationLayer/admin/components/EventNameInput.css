@@ -5,11 +5,11 @@
     margin-top: 20px;
 }
 
-.event-name-input {
+#aa{
     padding: 10px;
     margin-bottom: 10px;
     width: 450px;
-    height:30px;
+    height:48px;
     border: 1px solid #ccc;
     border-radius: 30px;
     font-size: 16px;
@@ -17,7 +17,7 @@
     padding-right:160px;
 }
 
-.next-button{
+.next-button11{
     padding: 10px 20px;
     background-color: #ff007f;
     width: 130px;
@@ -27,8 +27,8 @@
     cursor: pointer;
     font-size: 16px;
     box-shadow: 0 0 6px rgba(0, 123, 255, 0.6);
-    margin-top:-8.5%;
-    margin-left: 78%;
+    margin-top:-11.8%;
+    margin-left: 69%;
 }
 
 .next-button:hover {

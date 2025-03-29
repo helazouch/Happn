@@ -31,33 +31,33 @@ const AddEvent21: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="main-content">
       <Navbar />
       <div className="main-content21">
-        <h2>Creating: {eventName}</h2>
+        <h2 id="titre"> {eventName}</h2>
 
-        <h3>ORGANIZER:</h3>
+        <h2 className="main-content21-h2">ORGANIZER:</h2>
         <input
           type="text"
           placeholder="Enter organizer name"
           value={organizer}
           onChange={handleOrganizerChange}
-          className="organizer-input"
+          className="organizer-input21"
           required
         />
 
-        <h3>DESCRIPTION:</h3>
+        <h2 className="main-content21-h2">DESCRIPTION:</h2>
         <textarea
           placeholder="Enter event description"
           value={description}
           onChange={handleDescriptionChange}
-          className="description-textarea"
+          className="description-textarea21"
           required
         />
 
         <button
           onClick={handleNext}
-          className="next-button"
+          className="next-button21"
           disabled={!organizer.trim() || !description.trim()}
         >
           Next

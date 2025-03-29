@@ -3,16 +3,25 @@
     max-width: 600px;
     margin: 0 auto;
     margin-top:2%;
+    background-color: white;
+    
 }
+#titre{
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #242565;
+    font-family: 'DM Sans ';
+    text-align: center;
 
-.main-content21 h2 {
+}
+.main-content21-h2 {
     margin-bottom: 10px;
     font-size: 18px;
     color: #ff007f;
     font-family: 'DM Sans ';
 }
 
-.organizer-input {
+.organizer-input21 {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -22,7 +31,7 @@
     font-family: 'DM Sans ';
 }
 
-.description-textarea {
+.description-textarea21 {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -35,7 +44,7 @@
 
 }
 
-.next-button {
+.next-button21 {
     padding: 10px 20px;
     background-color: #ff007f;
     color: white;
@@ -46,6 +55,6 @@
     font-family: 'DM Sans ';
 }
 
-.next-button:hover {
+.next-button21:hover {
     background-color: #ff007f;
 }

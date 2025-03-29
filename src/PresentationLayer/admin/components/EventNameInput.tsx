@@ -32,17 +32,17 @@ const EventNameInput: React.FC<EventNameInputProps> = ({
         placeholder="Enter event name"
         value={eventName}
         onChange={handleInputChange}
-        className={`event-name-input ${error ? "error" : ""}`}
+        id='aa'
         disabled={isLoading}
       />
-      {error && <p className="error-message">{error}</p>}
       <button
         onClick={handleNext}
-        className="next-button"
+        className="next-button11"
         disabled={!eventName.trim() || isLoading}
       >
         {isLoading ? "Checking..." : "Next"}
       </button>
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

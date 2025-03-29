@@ -6,6 +6,7 @@ interface DuplicateEventModalProps {
   onYes: () => void;
   onNo: () => void;
   isLoading?: boolean;
+  eventName: string; 
 }
 
 const DuplicateEventModal: React.FC<DuplicateEventModalProps> = ({
@@ -13,17 +14,18 @@ const DuplicateEventModal: React.FC<DuplicateEventModalProps> = ({
   onYes,
   onNo,
   isLoading = false,
+  eventName, 
 }) => {
   if (!show) return null;
 
   return (
     <div className="dem-overlay">
       <div className="dem-modal">
-        
         <div className="dem-message">
-          Oops! Looks like this event already exists. Want to add the next version?
+          Oops! Looks like "<strong>{eventName}</strong>" already exists. 
+          Want to add the next version?
         </div>
-
+        {/* Le reste du code reste inchangé */}
         <div className="dem-buttons">
           <button
             className="dem-button dem-yes"

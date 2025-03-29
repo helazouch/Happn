@@ -1,6 +1,9 @@
 
-
-.main-content1 {
+.main-content{
+    background-color: white;
+    height:100vh ;
+}
+.main-content11 {
     display: flex;
     flex-direction: column;
     align-items: center;
