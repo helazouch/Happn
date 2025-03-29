@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import ConfirmationModal from "./ConfirmationModal";
-import { useNavigate } from "react-router-dom";
 import { EventService } from "../../ServiceLayer/eventManagement/EventService";
+import { FirebaseService } from "../../ServiceLayer/firebase/FirebaseService";
+import { useNavigationServiceAdminNavBar } from "../../RoutingLayer/navigation/NavigationServiceAdminNavBar";
 
 import "./AddEvent3.css";
 import "./ConfirmationModal.css";
 
 const AddEvent3: React.FC = () => {
-  const navigate = useNavigate();
 
   // Form state
+  const navigation = useNavigationServiceAdminNavBar();
+
   const [place, setPlace] = useState<string>("");
   const [specificDescription, setSpecificDescription] = useState<string>("");
   const [date, setDate] = useState<string>("");
@@ -24,15 +26,15 @@ const AddEvent3: React.FC = () => {
   const [error, setError] = useState<string>("");
 
   // Load data from previous steps
-  useEffect(() => {
-    const eventName = sessionStorage.getItem("newEventName");
-    const organizer = sessionStorage.getItem("newEventOrganizer");
-    const description = sessionStorage.getItem("newEventDescription");
+  // useEffect(() => {
+  //   const eventName = sessionStorage.getItem("newEventName");
+  //   const organizer = sessionStorage.getItem("newEventOrganizer");
+  //   const description = sessionStorage.getItem("newEventDescription");
 
-    if (!eventName || !organizer || !description) {
-      navigate("/events/new"); // Redirect if missing required data
-    }
-  }, [navigate]);
+  //   if (!eventName || !organizer || !description) {
+  //     navigate("/events/new"); // Redirect if missing required data
+  //   }
+  // }, [navigate]);
 
   // Form handlers
   const handlePlaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,48 +86,30 @@ const AddEvent3: React.FC = () => {
   const handleConfirm = async () => {
     setIsSubmitting(true);
     try {
-      // Get data from all steps
       const eventData = {
         name: sessionStorage.getItem("newEventName") || "",
         organizer: sessionStorage.getItem("newEventOrganizer") || "",
         description: sessionStorage.getItem("newEventDescription") || "",
+        // ↓ On ne met PAS les URLs ici ↓
+      };
+      
+      const versionData = {  // <-- Créez un objet séparé pour les données de version
         place,
         date: new Date(date),
         capacity,
         price,
         specificDescription,
         categories: selectedCategories,
+        img: imageFile ? await FirebaseService.uploadFile(imageFile, "images") : "",
+        planning: planningFile ? await FirebaseService.uploadFile(planningFile, "plannings") : ""
       };
+      
+      // Appel au service
+      const { eventId, versionId } = await EventService.createEventWithVersion(eventData, versionData);
 
-      // Create event with version
-      await EventService.createEventWithVersion(
-        {
-          name: eventData.name,
-          organizer: eventData.organizer,
-          description: eventData.description,
-        },
-        {
-          nom_version: "v1",
-          description_specifique: eventData.specificDescription,
-          date: eventData.date,
-          place: eventData.place,
-          price: eventData.price,
-          planning: planningFile ? planningFile.name : "",
-          img: imageFile ? imageFile.name : "",
-          capacity_max: eventData.capacity,
-          plan_mediatique: "Standard plan",
-          nbparticipants: 0,
-          categories: eventData.categories,
-        }
-      );
+    console.log("Événement créé avec succès, ID : ", eventId, " Version ID : ", versionId);
 
-      // Clear session storage
-      sessionStorage.removeItem("newEventName");
-      sessionStorage.removeItem("newEventOrganizer");
-      sessionStorage.removeItem("newEventDescription");
-
-      // Redirect to success page
-      navigate("/events?created=true");
+      navigation.goToEvents();
     } catch (err) {
       console.error("Event creation failed:", err);
       setError("Failed to create event. Please try again.");

@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import EventNameInput from "./components/EventNameInput";
-import { useNavigate } from "react-router-dom";
 import { EventRepository } from "../../DataLayer/repositories/EventRepository";
-import "./AddEvent1.css";
 import DuplicateEventModal from "./DuplicateEventModal";
+import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";  
+import "./AddEvent1.css";
 
 const AddEvent1: React.FC = () => {
-  const navigate = useNavigate();
+  const navigation = useNavigationServiceEvent();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [duplicateModalState, setDuplicateModalState] = useState({
     show: false,
     eventName: ""
-  });  
-  const [existingEventName, setExistingEventName] = useState("");
+  });
 
   const handleNameSubmit = async (name: string): Promise<boolean> => {
     if (!name.trim()) {
@@ -28,15 +27,13 @@ const AddEvent1: React.FC = () => {
     try {
       const exists = await EventRepository.nameExists(name);
       if (exists) {
-        setExistingEventName(name);
         setDuplicateModalState({
           show: true,
           eventName: name
         });
         return false;
       }
-      sessionStorage.setItem("newEventName", name);
-      navigate("/events/new/details");
+      navigation.goToAddEventDetails(name);
       return true;
     } catch (err) {
       setError("Error checking event name");
@@ -48,20 +45,17 @@ const AddEvent1: React.FC = () => {
   };
 
   const handleCreateNewVersion = () => {
-    sessionStorage.setItem("newEventName", existingEventName);
-    setDuplicateModalState({
-      show: false,
-      eventName: ""
-    });
-    navigate("/events/new/details");
+    navigation.confirmDuplicateAndGoToAddEvent3(duplicateModalState.eventName);
   };
 
   const handleCancelNewVersion = () => {
+    navigation.cancelDuplicateAndReturnToAddEvent1(
+      duplicateModalState.eventName
+    );
     setDuplicateModalState({
       show: false,
       eventName: ""
     });
-    setExistingEventName("");
   };
 
   return (
@@ -77,13 +71,12 @@ const AddEvent1: React.FC = () => {
         />
       </div>
 
-      {/* Ajout de la modale de duplication */}
       <DuplicateEventModal
         show={duplicateModalState.show}
         onYes={handleCreateNewVersion}
         onNo={handleCancelNewVersion}
         isLoading={isLoading}
-        eventName={existingEventName} // Passez le nom de l'événement ici
+        eventName={duplicateModalState.eventName}
       />
     </div>
   );

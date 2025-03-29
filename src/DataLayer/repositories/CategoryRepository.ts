@@ -1,4 +1,4 @@
-import { db } from "../firebase/config";
+import { db } from "../../ServiceLayer/firebase/firebaseConfig";
 import { collection, doc, setDoc, updateDoc, arrayUnion, getDocs } from "firebase/firestore";
 import type { Category } from "../models/Category";
 

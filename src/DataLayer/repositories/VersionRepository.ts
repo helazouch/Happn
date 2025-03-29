@@ -1,5 +1,5 @@
-import { db } from "../firebase/config";
-import { collection, doc, setDoc, updateDoc, increment, getDoc, arrayUnion } from "firebase/firestore";
+import { db } from "../../ServiceLayer/firebase/firebaseConfig";
+import { collection, doc, setDoc, updateDoc, increment, getDoc, arrayUnion, Timestamp, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 import type { Version } from "../models/Version";
 
 const versionsCol = collection(db, "versions");
@@ -31,7 +31,58 @@ export const VersionRepository = {
     const version = snap.data() as Version;
     return {
       current: version.nbparticipants,
-      max: version.capacity_max
+      max: version.capacity
     };
+  },
+
+  // Get last version by event ID
+  async getLastVersionByEventId(eventId: string): Promise<Version | null> {
+    try {
+      // 1. Créer la requête
+      const q = query(
+        versionsCol,
+        where("eventId", "==", eventId),
+        orderBy("date", "desc"),
+        limit(1)
+      );
+
+      // 2. Exécuter la requête
+      const querySnapshot = await getDocs(q);
+
+      // 3. Traiter les résultats
+      if (querySnapshot.empty) {
+        return null;
+      }
+
+      const doc = querySnapshot.docs[0];
+      const data = doc.data();
+
+      // 4. Convertir Timestamp en Date si nécessaire
+      return {
+        ...data,
+        id_version: doc.id,
+        date: data.date instanceof Timestamp ? data.date.toDate() : data.date
+      } as Version;
+      
+    } catch (error) {
+      console.error("Error getting last version:", error);
+      throw new Error("Failed to fetch last version");
+    }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 };

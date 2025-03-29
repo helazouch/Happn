@@ -1,47 +1,30 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
-import { useNavigate } from "react-router-dom";
+import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
 import "./AddEvent21.css";
 
 const AddEvent21: React.FC = () => {
-  const navigate = useNavigate();
+  const navigation = useNavigationServiceEvent();
   const eventName = sessionStorage.getItem("newEventName");
   const [organizer, setOrganizer] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
-  const handleOrganizerChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setOrganizer(event.target.value);
-  };
-
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setDescription(event.target.value);
-  };
-
   const handleNext = () => {
-    // Save data to session storage before navigating
-    sessionStorage.setItem("newEventOrganizer", organizer);
-    sessionStorage.setItem("newEventDescription", description);
-
-    // Navigate to next step
-    navigate("/events/new/finalize");
+    navigation.saveDetailsAndGoToAddEvent3(organizer, description);
   };
 
   return (
     <div className="main-content">
       <Navbar />
       <div className="main-content21">
-        <h2 id="titre"> {eventName}</h2>
+        <h2 id="titre">{eventName}</h2>
 
         <h2 className="main-content21-h2">ORGANIZER:</h2>
         <input
           type="text"
           placeholder="Enter organizer name"
           value={organizer}
-          onChange={handleOrganizerChange}
+          onChange={(e) => setOrganizer(e.target.value)}
           className="organizer-input21"
           required
         />
@@ -50,7 +33,7 @@ const AddEvent21: React.FC = () => {
         <textarea
           placeholder="Enter event description"
           value={description}
-          onChange={handleDescriptionChange}
+          onChange={(e) => setDescription(e.target.value)}
           className="description-textarea21"
           required
         />

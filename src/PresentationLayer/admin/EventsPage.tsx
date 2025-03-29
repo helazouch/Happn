@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import EventItem from "../common/components/EventItem";
 import Filters from "./components/Filters";
 import "./EventsPage.css";
-
+import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
 const events = [
   {
     date: "14",
@@ -35,6 +35,7 @@ const events = [
 ];
 
 const EventsPage = () => {
+  const navigation = useNavigationServiceEvent();
   const [filters, setFilters] = useState({
     weekdays: "Any",
     categories: [] as string[],
@@ -69,7 +70,7 @@ const EventsPage = () => {
               />
             ))}
           </div>
-          <button className="add-event-btn">Add Event</button>
+          <button className="add-event-btn" onClick={navigation.goToAddEvent} >Add Event</button>
         </div>
       </div>
     </div>
