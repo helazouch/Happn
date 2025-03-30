@@ -1,32 +1,50 @@
-import React, { useState } from 'react';
-import './EventNameInput.css'; // Nous allons créer ce fichier CSS ensuite
+import React, { useState } from "react";
+import "./EventNameInput.css";
 
-const EventNameInput: React.FC = () => {
-    const [eventName, setEventName] = useState<string>('');
+interface EventNameInputProps {
+  onSubmit: (name: string) => Promise<boolean>;
+  error?: string;
+  onError?: (message: string) => void;
+  isLoading?: boolean;
+}
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEventName(event.target.value);
-    };
+const EventNameInput: React.FC<EventNameInputProps> = ({
+  onSubmit,
+  error,
+  onError,
+  isLoading = false,
+}) => {
+  const [eventName, setEventName] = useState("");
 
-    const handleNext = () => {
-        // Logique pour le bouton Next
-        console.log('Event Name:', eventName);
-    };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEventName(e.target.value);
+    if (error && onError) onError("");
+  };
 
-    return (
-        <div className="event-name-container">
-            <input
-                type="text"
-                placeholder="Enter event name"
-                value={eventName}
-                onChange={handleInputChange}
-                className="event-name-input"
-            />
-            <button onClick={handleNext} className="next-button">
-                Next
-            </button>
-        </div>
-    );
+  const handleNext = async () => {
+    await onSubmit(eventName);
+  };
+
+  return (
+    <div className="event-name-container">
+      <input
+        type="text"
+        placeholder="Enter event name"
+        value={eventName}
+        onChange={handleInputChange}
+        id='aa'
+        disabled={isLoading}
+      />
+      <button
+        onClick={handleNext}
+        className="next-button11"
+        disabled={!eventName.trim() || isLoading}
+      >
+        {isLoading ? "Checking..." : "Next"}
+      </button>
+      {error && <p className="error-message">{error}</p>}
+    </div>
+  );
 };
 
 export default EventNameInput;
