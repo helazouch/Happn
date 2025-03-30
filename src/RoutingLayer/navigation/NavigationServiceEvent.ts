@@ -26,7 +26,7 @@ export const useNavigationServiceEvent = () => {
       sessionStorage.setItem("newEventName", eventName);
       sessionStorage.setItem("newEventOrganizer", "");
       sessionStorage.setItem("newEventDescription", "");
-      navigate("/events/new/finalize"); //il ya probleme ici
+      navigate("/events/new/finalize"); 
     },
 
     cancelDuplicateAndReturnToAddEvent1: (eventName: string) => {
