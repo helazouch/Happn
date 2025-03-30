@@ -96,3 +96,57 @@
 .participate-btn:hover {
   background-color: #2a25b5;
 }
+
+/* Add these styles to your existing EventItem.css */
+.capacity-info {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.capacity-info.full {
+  color: #ff4444;
+  font-weight: bold;
+}
+
+.full-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+/* Optional: Add animation for better visibility */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.capacity-info.full .full-badge {
+  animation: pulse 1.5s infinite;
+}
+
+.participate-btn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.participate-btn:disabled::after {
+  content: "Event Full";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
