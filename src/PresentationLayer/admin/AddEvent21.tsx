@@ -1,16 +1,53 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
+import { ServiceConnector } from "../../RoutingLayer/serviceRoutes/serviceConnector";
 import "./AddEvent21.css";
 
 const AddEvent21: React.FC = () => {
   const navigation = useNavigationServiceEvent();
-  const eventName = sessionStorage.getItem("newEventName");
-  const [organizer, setOrganizer] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const eventName = sessionStorage.getItem("newEventName") || "";
+  const [organizer, setOrganizer] = useState("");
+  const [description, setDescription] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleNext = () => {
-    navigation.saveDetailsAndGoToAddEvent3(organizer, description);
+  const handleSubmit = async () => {
+    if (!organizer.trim() || !description.trim()) {
+      setError("Organizer and description are required");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // Show confirmation dialog
+      const isConfirmed = window.confirm(
+        `Create new event?\n\nEvent: ${eventName}\nOrganizer: ${organizer}`
+      );
+      if (!isConfirmed) return;
+
+      // Create the event in database
+      const eventId = await ServiceConnector.createEvent({
+        name: eventName,
+        organizer,
+        description,
+        categories: [],
+        versions: [],
+      });
+
+      // Store the ID and navigate using navigation service
+      sessionStorage.setItem("currentEventId", eventId);
+      navigation.saveDetailsAndGoToAddEvent3(organizer, description);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Event creation failed";
+      setError(errorMessage);
+      console.error("Event creation error:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,12 +75,21 @@ const AddEvent21: React.FC = () => {
           required
         />
 
+        {error && <div className="error-message">{error}</div>}
+
         <button
-          onClick={handleNext}
+          onClick={handleSubmit}
           className="next-button21"
-          disabled={!organizer.trim() || !description.trim()}
+          disabled={!organizer.trim() || !description.trim() || isLoading}
         >
-          Next
+          {isLoading ? (
+            <>
+              <span className="spinner"></span>
+              Creating...
+            </>
+          ) : (
+            "Next"
+          )}
         </button>
       </div>
     </div>

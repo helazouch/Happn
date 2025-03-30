@@ -1,126 +1,149 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import ConfirmationModal from "./ConfirmationModal";
-// import { EventService } from "../../ServiceLayer/eventManagement/EventService";
+import { Timestamp } from "firebase/firestore";
+import { Version } from "../../DataLayer/models/Version";
 import { FirebaseService } from "../../ServiceLayer/firebase/FirebaseService";
 import { useNavigationServiceAdminNavBar } from "../../RoutingLayer/navigation/NavigationServiceAdminNavBar";
-
 import "./AddEvent3.css";
 import "./ConfirmationModal.css";
 
+interface ConfirmationData {
+  place: string;
+  date: string;
+  capacity: number;
+  price: number;
+  selectedCategories: string[];
+}
+
 const AddEvent3: React.FC = () => {
-
-  // Form state
   const navigation = useNavigationServiceAdminNavBar();
+  const eventId = sessionStorage.getItem("currentEventId") || "";
+  const eventName = sessionStorage.getItem("newEventName") || "";
 
-  const [place, setPlace] = useState<string>("");
-  const [specificDescription, setSpecificDescription] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-  const [capacity, setCapacity] = useState<number>(250);
-  const [price, setPrice] = useState<number>(250);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  // Form state - always store dates as Date objects in component state
+  const [versionData, setVersionData] = useState<Omit<Version, "id_version">>({
+    versionName: `${eventName} - ${new Date().toLocaleDateString()}`,
+    specificDescription: "",
+    date: new Date(), // Always stored as Date in state
+    place: "",
+    price: 250,
+    planning: "",
+    img: "",
+    nbparticipants: 0,
+    capacity: 250,
+    plan_mediatique: "",
+    eventId,
+    categories: [],
+  });
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [planningFile, setPlanningFile] = useState<File | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  // Load data from previous steps
-  // useEffect(() => {
-  //   const eventName = sessionStorage.getItem("newEventName");
-  //   const organizer = sessionStorage.getItem("newEventOrganizer");
-  //   const description = sessionStorage.getItem("newEventDescription");
-
-  //   if (!eventName || !organizer || !description) {
-  //     navigate("/events/new"); // Redirect if missing required data
-  //   }
-  // }, [navigate]);
-
-  // Form handlers
-  const handlePlaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPlace(event.target.value);
+  // Convert to Date object if it's a Timestamp
+  const getDateObject = (date: Date | Timestamp): Date => {
+    return date instanceof Date ? date : date.toDate();
   };
 
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setSpecificDescription(event.target.value);
+  // Handlers
+  const handleInputChange =
+    (field: keyof Omit<Version, "id_version">) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setVersionData((prev) => ({
+        ...prev,
+        [field]: e.target.value,
+      }));
+    };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVersionData((prev) => ({
+      ...prev,
+      date: new Date(e.target.value), // Always store as Date
+    }));
   };
 
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(event.target.value);
-  };
-
-  const handleCapacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCapacity(Number(event.target.value));
-  };
-
-  const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPrice(Number(event.target.value));
-  };
+  const handleNumberChange =
+    (field: "price" | "capacity") =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setVersionData((prev) => ({
+        ...prev,
+        [field]: Number(e.target.value),
+      }));
+    };
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
-    );
+    setVersionData((prev) => {
+      const newCategories = prev.categories?.includes(category)
+        ? prev.categories.filter((c) => c !== category)
+        : [...(prev.categories || []), category];
+      return { ...prev, categories: newCategories };
+    });
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.[0]) {
-      setImageFile(event.target.files[0]);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      setImageFile(e.target.files[0]);
     }
   };
 
-  const handlePlanningChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.[0]) {
-      setPlanningFile(event.target.files[0]);
+  const handlePlanningChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      setPlanningFile(e.target.files[0]);
     }
   };
 
-  const handleModalSubmit = () => {
-    setShowModal(true);
-  };
+  const handleSubmit = async () => {
+    if (!eventId) {
+      setError("No parent event found. Please start over.");
+      return;
+    }
 
-  const handleConfirm = async () => {
+    if (!versionData.place || !versionData.date) {
+      setError("Place and date are required");
+      return;
+    }
+
     setIsSubmitting(true);
+    setError("");
+
     try {
-      const eventData = {
-        name: sessionStorage.getItem("newEventName") || "",
-        organizer: sessionStorage.getItem("newEventOrganizer") || "",
-        description: sessionStorage.getItem("newEventDescription") || "",
-        // ↓ On ne met PAS les URLs ici ↓
-      };
-      
-      const versionData = {  // <-- Créez un objet séparé pour les données de version
-        place,
-        date: new Date(date),
-        capacity,
-        price,
-        specificDescription,
-        categories: selectedCategories,
-        img: imageFile ? await FirebaseService.uploadFile(imageFile, "images") : "",
-        planning: planningFile ? await FirebaseService.uploadFile(planningFile, "plannings") : ""
-      };
-      
-      // Appel au service
-      // const { eventId, versionId } = await EventService.createEventWithVersion(eventData, versionData);
+      // 1. Upload files first
+      const [imgUrl, planningUrl] = await Promise.all([
+        imageFile ? FirebaseService.uploadFile(imageFile, "event-images") : "",
+        planningFile
+          ? FirebaseService.uploadFile(planningFile, "event-plans")
+          : "",
+      ]);
 
-    // console.log("Événement créé avec succès, ID : ", eventId, " Version ID : ", versionId);
+      // 2. Prepare version data for Firestore
+      const versionToCreate = {
+        ...versionData,
+        date: Timestamp.fromDate(getDateObject(versionData.date)), // Convert to Timestamp
+        img: imgUrl,
+        planning: planningUrl,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      };
 
+      // 3. Create version in Firestore
+      const versionId = await FirebaseService.createVersion(versionToCreate);
+
+      // 4. Link version to parent event
+      await FirebaseService.addVersionToEvent(eventId, versionId);
+
+      alert(`✅ Version created successfully!\nVersion ID: ${versionId}`);
       navigation.goToEvents();
     } catch (err) {
-      console.error("Event creation failed:", err);
-      setError("Failed to create event. Please try again.");
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to create version";
+      setError(errorMessage);
+      console.error("Version creation error:", err);
     } finally {
       setIsSubmitting(false);
-      setShowModal(false);
     }
-  };
-
-  const handleCancel = () => {
-    setShowModal(false);
   };
 
   const categories = [
@@ -129,6 +152,18 @@ const AddEvent3: React.FC = () => {
     "Cultural & Entertainment Events",
     "Sports & Wellness Events",
   ];
+
+  // Get current date as Date object for display
+  const currentDate = getDateObject(versionData.date);
+
+  // Prepare confirmation data
+  const confirmationData: ConfirmationData = {
+    place: versionData.place,
+    date: currentDate.toISOString().split("T")[0],
+    capacity: versionData.capacity,
+    price: versionData.price,
+    selectedCategories: versionData.categories || [],
+  };
 
   return (
     <div className="page-container">
@@ -143,8 +178,8 @@ const AddEvent3: React.FC = () => {
             <input
               type="text"
               placeholder="Enter place"
-              value={place}
-              onChange={handlePlaceChange}
+              value={versionData.place}
+              onChange={handleInputChange("place")}
               required
             />
           </div>
@@ -153,7 +188,7 @@ const AddEvent3: React.FC = () => {
             <h2 className="form-section-h2">DATE:</h2>
             <input
               type="date"
-              value={date}
+              value={currentDate.toISOString().split("T")[0]}
               onChange={handleDateChange}
               required
               min={new Date().toISOString().split("T")[0]}
@@ -167,16 +202,16 @@ const AddEvent3: React.FC = () => {
                 type="range"
                 min="1"
                 max="500"
-                value={capacity}
-                onChange={handleCapacityChange}
+                value={versionData.capacity}
+                onChange={handleNumberChange("capacity")}
                 className="range-input"
                 style={
                   {
-                    "--fill-percent": `${(capacity / 500) * 100}%`,
+                    "--fill-percent": `${(versionData.capacity / 500) * 100}%`,
                   } as React.CSSProperties
                 }
               />
-              <span className="range-value">{capacity}</span>
+              <span className="range-value">{versionData.capacity}</span>
             </div>
           </div>
 
@@ -187,16 +222,16 @@ const AddEvent3: React.FC = () => {
                 type="range"
                 min="1"
                 max="500"
-                value={price}
-                onChange={handlePriceChange}
+                value={versionData.price}
+                onChange={handleNumberChange("price")}
                 className="range-input"
                 style={
                   {
-                    "--fill-percent": `${(price / 500) * 100}%`,
+                    "--fill-percent": `${(versionData.price / 500) * 100}%`,
                   } as React.CSSProperties
                 }
               />
-              <span className="range-value">{price}</span>
+              <span className="range-value">{versionData.price}</span>
             </div>
           </div>
         </div>
@@ -227,8 +262,8 @@ const AddEvent3: React.FC = () => {
             <h2 className="form-section-h2">SPECIFIED DESCRIPTION:</h2>
             <textarea
               placeholder="Enter detailed description"
-              value={specificDescription}
-              onChange={handleDescriptionChange}
+              value={versionData.specificDescription}
+              onChange={handleInputChange("specificDescription")}
               className="description-textarea"
               rows={5}
             />
@@ -244,7 +279,9 @@ const AddEvent3: React.FC = () => {
                 <label key={category} className="category-item">
                   <input
                     type="checkbox"
-                    checked={selectedCategories.includes(category)}
+                    checked={
+                      versionData.categories?.includes(category) || false
+                    }
                     onChange={() => handleCategoryChange(category)}
                   />
                   <span>{category}</span>
@@ -254,8 +291,8 @@ const AddEvent3: React.FC = () => {
           </div>
 
           <button
-            onClick={handleModalSubmit}
-            disabled={isSubmitting || !date || !place}
+            onClick={() => setShowModal(true)}
+            disabled={isSubmitting || !versionData.place || !versionData.date}
             className="finish-button3"
           >
             {isSubmitting ? (
@@ -270,18 +307,11 @@ const AddEvent3: React.FC = () => {
         </div>
       </div>
 
-      {/* Confirmation Modal */}
       <ConfirmationModal
         show={showModal}
-        onConfirm={handleConfirm}
-        onCancel={handleCancel}
-        formData={{
-          place,
-          date,
-          capacity,
-          price,
-          selectedCategories
-        }}
+        onConfirm={handleSubmit}
+        onCancel={() => setShowModal(false)}
+        formData={confirmationData}
         isLoading={isSubmitting}
       />
     </div>
