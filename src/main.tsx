@@ -1,14 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
 import "./index.css";
-import { router } from "./RoutingLayer/navigation/router";
-import { ToastContainer } from "react-toastify";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+import AddEvent3 from "./PresentationLayer/admin/AddEvent3";
+import Login from "./PresentationLayer/participant/Login/Login";
+import ParticipantProfile from "./PresentationLayer/participant/ParticipantProfile/ParticipantProfile";
+import SignUp from "./PresentationLayer/participant/Login/SignUp/SignUp";
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    {/* <RouterProvider router={eventCreationRouter} /> */}
-    <RouterProvider router={router} />
-    <ToastContainer />
+    {/* <EventsPage></EventsPage> */}
+    <SignUp></SignUp>
+    <Login></Login>
   </React.StrictMode>
 );
