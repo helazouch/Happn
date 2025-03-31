@@ -22,42 +22,42 @@ interface IVersionData {
 }
 
 // Route POST /events/add
-router.post('/add', async (req: Request<{}, {}, {
-  eventData: IEventData;
-  versionData: IVersionData
-}>, res: Response) => {
-  try {
-    // 1. Récupération des données du body
-    const { eventData, versionData } = req.body;
+// router.post('/add', async (req: Request<{}, {}, {
+//   eventData: IEventData;
+//   versionData: IVersionData
+// }>, res: Response) => {
+//   try {
+//     // 1. Récupération des données du body
+//     const { eventData, versionData } = req.body;
 
-    // 2. Validation
-    if (!eventData?.name || !versionData?.img) {
-      return res.status(400).json({
-        success: false,
-        error: "Les champs 'name' et 'img' sont obligatoires"
-      });
-    }
+//     // 2. Validation
+//     if (!eventData?.name || !versionData?.img) {
+//       return res.status(400).json({
+//         success: false,
+//         error: "Les champs 'name' et 'img' sont obligatoires"
+//       });
+//     }
 
-    // 3. Appel au service
-    const { eventId, versionId } = await EventService.createEventWithVersion(
-      eventData,
-      versionData
-    );
+//     // 3. Appel au service
+//     const { eventId, versionId } = await EventService.createEventWithVersion(
+//       eventData,
+//       versionData
+//     );
 
-    // 4. Réponse
-    return res.status(201).json({
-      success: true,
-      eventId,
-      versionId
-    });
+//     // 4. Réponse
+//     return res.status(201).json({
+//       success: true,
+//       eventId,
+//       versionId
+//     });
 
-  } catch (error) {
-    console.error("[events.ts] Erreur:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Erreur serveur"
-    });
-  }
-});
+//   } catch (error) {
+//     console.error("[events.ts] Erreur:", error);
+//     return res.status(500).json({
+//       success: false,
+//       error: "Erreur serveur"
+//     });
+//   }
+// });
 
 export default router;
