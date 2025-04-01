@@ -7,6 +7,7 @@ import { FirebaseService } from "../../ServiceLayer/firebase/FirebaseService";
 import { useNavigationServiceAdminNavBar } from "../../RoutingLayer/navigation/NavigationServiceAdminNavBar";
 import "./AddEvent3.css";
 import "./ConfirmationModal.css";
+import { ServiceConnector } from "../../RoutingLayer/apiRoutes/eventRoute";
 
 interface ConfirmationData {
   place: string;
@@ -112,9 +113,9 @@ const AddEvent3: React.FC = () => {
     try {
       // 1. Upload files first
       const [imgUrl, planningUrl] = await Promise.all([
-        imageFile ? FirebaseService.uploadFile(imageFile, "event-images") : "",
+        imageFile ? ServiceConnector.uploadEventFile(imageFile) : "",
         planningFile
-          ? FirebaseService.uploadFile(planningFile, "event-plans")
+          ? ServiceConnector.uploadEventFile(planningFile)
           : "",
       ]);
 
@@ -129,12 +130,8 @@ const AddEvent3: React.FC = () => {
       };
 
       // 3. Create version in Firestore
-      const versionId = await FirebaseService.createVersion(versionToCreate);
-
-      // 4. Link version to parent event
-      await FirebaseService.addVersionToEvent(eventId, versionId);
-
-      alert(`✅ Version created successfully!\nVersion ID: ${versionId}`);
+      const versionId = await ServiceConnector.createAndAttachVersion(eventId,versionToCreate);
+      alert(` Version created successfully!\nVersion ID: ${versionId}`);
       navigation.goToEvents();
     } catch (err) {
       const errorMessage =

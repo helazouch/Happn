@@ -1,6 +1,6 @@
-import EventSlider from "./EventSlider";
+import EventSlider from "./components/EventSlider";
 import "./LandingPage.css";
-import HeaderComponent from "./HeaderComponent";
+import HeaderComponent from "./components/HeaderComponent";
 
 const LandingPage = () => {
   const events = [

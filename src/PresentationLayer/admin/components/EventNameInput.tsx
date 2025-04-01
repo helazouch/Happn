@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./EventNameInput.css";
 
 interface EventNameInputProps {
+  eventName: string;               // <-- Nouvelle prop
+  setEventName: (name: string) => void; // <-- Nouvelle prop
   onSubmit: (name: string) => Promise<boolean>;
   error?: string;
   onError?: (message: string) => void;
@@ -9,12 +11,13 @@ interface EventNameInputProps {
 }
 
 const EventNameInput: React.FC<EventNameInputProps> = ({
+  eventName,
+  setEventName,
   onSubmit,
   error,
   onError,
   isLoading = false,
 }) => {
-  const [eventName, setEventName] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEventName(e.target.value);

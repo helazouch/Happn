@@ -1,24 +1,68 @@
 import { FaGoogle } from "react-icons/fa";
 import { useState } from "react";
 import "./SignUp.css";
-
+import { useNavigationServiceAuth } from "../../RoutingLayer/navigation/NavigationServiceAuth";
+import { ServiceConnector } from "../../RoutingLayer/apiRoutes/authRoute";
 const SignUp = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const navigation = useNavigationServiceAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle sign up logic here
-    console.log({ email, password, confirmPassword });
+    setError("");
+
+    if (password !== confirmPassword) {
+      alert("Les mots de passe ne correspondent pas.")
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    try {
+      const { user, isSpecialUser } = await ServiceConnector.signUpWithEmail(email,password)
+      alert("Compte créé avec succès ! et le user id est");
+      alert(user.uid);
+      alert(user.email);
+      if (isSpecialUser){
+        navigation.goToAdminDashboard(user.uid,user.email||"","1");
+      }
+      else {
+        navigation.goToParticipantDashboard(user.uid,user.email||"","1");
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue s'est produite.");
+      }
+    }
   };
 
-  const handleGoogleSignUp = () => {
-    // Handle Google sign up logic here
-    console.log("Signing up with Google");
+  const handleGoogleSignUp = async () => {
+    try {
+      const { user, isSpecialUser }= await ServiceConnector.signWithGoogle();
+    alert("Connexion avec Google réussie !");
+    alert(user.uid)
+    alert(user.email)
+    if (isSpecialUser){
+      navigation.goToAdminDashboard(user.uid,user.email||"","2");
+    }
+    else {
+      navigation.goToParticipantDashboard(user.uid,user.email||"","2");
+    }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue s'est produite!!");
+      }
+    }
   };
 
   return (
+    <form onSubmit={handleSubmit}>
     <div className="sign-up-container">
       {/* Left Column - Sign Up Form */}
       <div className="sign-up-form-column">
@@ -34,7 +78,7 @@ const SignUp = () => {
 
           <div className="divider">or</div>
 
-          <form onSubmit={handleSubmit}>
+  
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
@@ -60,14 +104,14 @@ const SignUp = () => {
             </div>
 
             <div className="action-row">
-              <button type="submit" className="sign-up-btn">
+              {/* <button type="submit" className="sign-up-btn">
                 Sign Up
-              </button>
+              </button> */}
               <span className="have-account">
-                Have an account? <a href="#">Sign in</a>
+                Have an account? <a onClick={navigation.goToSignIn}>Sign in</a>
               </span>
             </div>
-          </form>
+          
         </div>
       </div>
 
@@ -93,16 +137,17 @@ const SignUp = () => {
           </div>
 
           <div className="secondary-action-row">
-            <span className="have-account">
+            {/* <span className="have-account">
               Have an account? <a href="#">Sign in</a>
-            </span>
-            <button type="button" className="sign-up-btn">
-              Sign Up
+            </span> */}
+            <button type="submit" className="sign-up-btn">
+                Sign Up
             </button>
           </div>
         </div>
       </div>
     </div>
+    </form>
   );
 };
 

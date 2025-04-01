@@ -1,20 +1,58 @@
 import { FaGoogle } from "react-icons/fa";
 import { useState } from "react";
 import "./Login.css";
+import { useNavigationServiceAuth } from "../../RoutingLayer/navigation/NavigationServiceAuth";
+import { ServiceConnector } from "../../RoutingLayer/apiRoutes/authRoute";
 
 const Login = () => {
+  const navigation = useNavigationServiceAuth();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ email, password });
+    setError("");
+
+    try {
+      const { user, isSpecialUser }= await ServiceConnector.signInWithEmail(email,password);
+
+      alert("Connexion réussie !");
+      if (isSpecialUser){
+        navigation.goToAdminDashboard(user.uid,user.email||"","1");
+      }
+      else {
+        navigation.goToParticipantDashboard(user.uid,user.email||"","1");
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+        alert("erreur de connexion");
+        navigation.goToAuthError();
+      } else {
+        setError("Une erreur inconnue s'est produite !");
+      }
+    }
   };
 
-  const handleGoogleSignIn = () => {
-    // Handle Google sign in logic here
-    console.log("Signing in with Google");
+  const handleGoogleSignIn = async () => {
+    try {
+       const { user, isSpecialUser } = await ServiceConnector.signWithGoogle();
+      alert("Connexion avec Google réussie !");
+      if (isSpecialUser){
+        navigation.goToAdminDashboard(user.uid,user.email||"","2");
+      }
+      else {
+        navigation.goToParticipantDashboard(user.uid,user.email||"","2");
+      }
+      
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue s'est produite !");
+      }
+    }
   };
 
   return (
@@ -28,11 +66,7 @@ const Login = () => {
       <div className="login-column">
         <h2 className="login-title">Sign In</h2>
 
-        <button
-          className="google-btn"
-          onClick={handleGoogleSignIn}
-          type="button"
-        >
+        <button className="google-btn" onClick={handleGoogleSignIn} type="button">
           <FaGoogle className="google-icon" />
           Sign in with Google
         </button>
@@ -64,9 +98,11 @@ const Login = () => {
             />
           </div>
 
+          {error && <p className="error-message">{error}</p>}
+
           <div className="action-row">
             <span className="create-account">
-              Don't have an account? <a href="#">Create one</a>
+              Don't have an account? <a onClick={navigation.goToSignUp}>Create one</a>
             </span>
             <button type="submit" className="signin-btn">
               Sign In

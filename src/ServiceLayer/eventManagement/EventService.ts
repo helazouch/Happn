@@ -1,6 +1,9 @@
 // src/ServicesLayer/eventManagement/EventService.ts
 import { FirebaseService } from "../firebase/FirebaseService";
 import { Event } from "../../DataLayer/models/Event";
+import { EventRepository } from "../../DataLayer/repositories/EventRepository"
+import { Connector } from "../../RoutingLayer/serviceRoutes/Connector";
+import { Version } from "../../DataLayer/models/Version";
 
 export class EventService {
   static async createEvent(eventData: Omit<Event, "id_event">): Promise<string> {
@@ -30,4 +33,50 @@ export class EventService {
     console.error("[EventService] Error:", error);
     // Add error transformation logic here if needed
   }
+
+
+
+  static async getEventExistence(eventName: string): Promise<boolean > {
+    try {
+      const test = await EventRepository.nameExists(eventName);
+      return test;
+    } catch (error) {
+      console.error("[EventService] Error fetching event by name:", error);
+      throw error;
+    }
+  }
+
+
+
+  static async getEventId(eventName: string): Promise<string  > {
+    try {
+      const eventId = await EventRepository.getByName(eventName);
+      return eventId?? "";
+    } catch (error) {
+      console.error("[EventService] Error fetching event by name:", error);
+      throw error;
+    }
+  }
+
+
+  static async uploadEventFile(imageFile: File): Promise<string> {
+    try {
+      return await Connector.uploadEventFile(imageFile);
+    } catch (error) {
+      console.error("[ServiceConnector] Error uploading event image:", error);
+      throw error;
+    }
+  }
+
+  static async createAndAttachVersion(eventId: string, versionData: Omit<Version, 'id_version'>): Promise<string> {
+    try {
+      const versionId=await Connector.createAndAttachVersion(eventId,versionData);
+
+      return versionId;
+    } catch (error) {
+      console.error("[ServiceConnector] Error in createAndAttachVersion:", error);
+      throw new Error("Failed to create and attach version to event");
+    }
+  }
+
 }

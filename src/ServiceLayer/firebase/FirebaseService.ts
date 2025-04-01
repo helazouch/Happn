@@ -1,9 +1,10 @@
 // src/ServicesLayer/firebase/FirebaseService.ts
-import { storage, db } from "./firebaseConfig";
+import { storage, db, createUserWithEmailAndPassword, auth, googleProvider } from "./firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { addDoc, arrayUnion, collection, doc, enableMultiTabIndexedDbPersistence, FirestoreError, Timestamp, updateDoc } from "firebase/firestore";
 import { Event } from "../../DataLayer/models/Event";
 import { Version } from "../../DataLayer/models/Version";
+import { signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
 
 // Initialize persistence
 enableMultiTabIndexedDbPersistence(db).catch((err: unknown) => {
@@ -77,4 +78,64 @@ export class FirebaseService {
       throw new Error("Failed to update event with new version");
     }
   }
+  static async signUpWithEmail(email: string, password: string): Promise<{ user: User; isSpecialUser: boolean }> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      // Liste des emails autorisés
+      const specialEmails = ["lindachrigui03@gmail.com", "zouchhend1@gmail.com"];
+      
+      // Vérifier si l'email est dans la liste
+      const isSpecialUser = specialEmails.includes(user.email || "");
+      return { user, isSpecialUser };
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+      throw error;
+    }
+  }
+
+
+
+
+  static async signWithGoogle(): Promise<{ user: User; isSpecialUser: boolean }> {
+    try {
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const user = userCredential.user;
+
+      // Liste des emails autorisés
+      const specialEmails = ["lindachrigui03@gmail.com", "zouchhend1@gmail.com"];
+      
+      // Vérifier si l'email est dans la liste
+      const isSpecialUser = specialEmails.includes(user.email || "");
+
+      return { user, isSpecialUser };
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      throw error;
+    }
+}
+
+
+
+
+
+  static async signInWithEmail(email: string, password: string): Promise<{ user: User; isSpecialUser: boolean }> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      // Liste des emails autorisés
+      const specialEmails = ["lindachrigui03@gmail.com", "zouchhend1@gmail.com"];
+      
+      // Vérifier si l'email est dans la liste
+      const isSpecialUser = specialEmails.includes(user.email || "");
+
+      return { user, isSpecialUser };
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+      throw error;
+    }
+  }
+
+
+
 }

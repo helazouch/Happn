@@ -1,6 +1,9 @@
+import { useNavigationServiceAuth } from "../../../RoutingLayer/navigation/NavigationServiceAuth";
 import "./HeaderComponent.css";
+import SignupButton from "./SignupButton";
 
 const HeaderComponent = () => {
+  const navigation = useNavigationServiceAuth();
   return (
     <header className="page-header">
       <div className="header-container">
@@ -30,12 +33,13 @@ const HeaderComponent = () => {
 
           {/* Auth buttons */}
           <div className="auth-buttons">
-            <a href="#login" className="login-link">
+            <a  className="login-link" onClick={navigation.goToSignIn}>
               Login
             </a>
-            <a href="#signup" className="signup-button">
+            <a  className="signup-button" onClick={navigation.goToSignUp}>
               Sign Up
             </a>
+            {/* <SignupButton /> */}
           </div>
         </nav>
       </div>
@@ -44,3 +48,6 @@ const HeaderComponent = () => {
 };
 
 export default HeaderComponent;
+
+
+

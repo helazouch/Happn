@@ -68,5 +68,18 @@ export const EventRepository = {
       console.error("Error checking event name:", error);
       throw error;
     }
-  }
+  },
+
+
+  // Get event by name
+  async getByName(eventName: string): Promise<string | null> {
+    const eventsSnapshot = await getDocs(eventsCol); // Get all events
+    for (const docSnap of eventsSnapshot.docs) {
+        const event = docSnap.data() as Event;
+        if (event.name === eventName) {
+            return event.id_event || null; // Return event ID if found
+        }
+    }
+    return null; // Return null if event not found
+}
 };

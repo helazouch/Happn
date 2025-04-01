@@ -21,8 +21,9 @@ export const useNavigationServiceEvent = () => {
       sessionStorage.setItem("newEventName", eventName);
     },
 
-    confirmDuplicateAndGoToAddEvent3: (eventName: string) => {
+    confirmDuplicateAndGoToAddEvent3: (eventName: string,eventId:string) => {
       console.log("Navigating to /events/new/finalize");
+      sessionStorage.setItem("currentEventId",eventId);
       sessionStorage.setItem("newEventName", eventName);
       sessionStorage.setItem("newEventOrganizer", "");
       sessionStorage.setItem("newEventDescription", "");
@@ -35,9 +36,11 @@ export const useNavigationServiceEvent = () => {
     },
 
     saveDetailsAndGoToAddEvent3: (
+      eventId :string,
       organizer: string,
       description: string
     ) => {
+      sessionStorage.setItem("currentEventId", eventId);
       sessionStorage.setItem("newEventOrganizer", organizer);
       sessionStorage.setItem("newEventDescription", description);
       navigate("/events/new/finalize");

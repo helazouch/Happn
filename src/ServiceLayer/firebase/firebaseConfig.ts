@@ -1,7 +1,9 @@
 // src/DataLayer/firebase/config.ts
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth";
+
 import { getStorage } from "firebase/storage";  
 
 const firebaseConfig = {
@@ -12,6 +14,7 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
+console.log("Firebase Config:", firebaseConfig);
 
 // Initialisation de Firebase
 const app = initializeApp(firebaseConfig);
@@ -19,4 +22,7 @@ const app = initializeApp(firebaseConfig);
 // Initialisation des services
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
 export const storage = getStorage(app);  // Export de Firebase Storage
+
+export { signInWithPopup, createUserWithEmailAndPassword , signInWithEmailAndPassword };

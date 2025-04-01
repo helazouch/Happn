@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
-import { ServiceConnector } from "../../RoutingLayer/serviceRoutes/serviceConnector";
+import { ServiceConnector } from "../../RoutingLayer/apiRoutes/eventRoute";
 import "./AddEvent21.css";
 
 const AddEvent21: React.FC = () => {
@@ -36,10 +36,8 @@ const AddEvent21: React.FC = () => {
         categories: [],
         versions: [],
       });
-
-      // Store the ID and navigate using navigation service
-      sessionStorage.setItem("currentEventId", eventId);
-      navigation.saveDetailsAndGoToAddEvent3(organizer, description);
+      
+      navigation.saveDetailsAndGoToAddEvent3(eventId,organizer, description);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Event creation failed";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./NavbarParticipant.css";
-import LogoutButtonP from "./LogoutButtonp";
+import LogoutButtonP from "../components/LogoutButtonp";
 import profileIcon from "/profile.png"; // Adjust path to your image
 
 const NavbarParticipant: React.FC = () => {

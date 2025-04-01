@@ -1,6 +1,6 @@
 // import React, { useState } from 'react';
 // import './Statistics.css';
-import NavbarParticipant from "./NavbarParticipant";
+import NavbarParticipant from "../components/NavbarParticipant"
 import ProfileSettings from "./ProfileSettings";
 // import Notifications from './components/Notifications';
 // import AxesSelector from './components/AxesSelector';
