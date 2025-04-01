@@ -1,14 +1,11 @@
 import React from 'react';
 import './LogoutButton.css';
+import { useNavigationServiceStart } from '../../../RoutingLayer/navigation/NavigationServiceStart';
 
 const LogoutButton: React.FC = () => {
-  const handleLogout = () => {
-    // Ici tu peux ajouter ta logique de déconnexion
-    console.log('User logged out');
-  };
-
+  const navigation=useNavigationServiceStart();
   return (
-    <button className="logout-button" onClick={handleLogout}>
+    <button className="logout-button" onClick={navigation.goToLandingPage}>
       Log out
     </button>
   );

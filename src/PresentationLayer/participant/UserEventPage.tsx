@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import Navbar from "./NavbarUser";
-import EventItem from "../../common/components/EventItem";
-import Filters from "../../admin/components/Filters";
-import "../../admin/EventsPage.css";
-import { useNavigationServiceEvent } from "../../../RoutingLayer/navigation/NavigationServiceEvent";
+import Navbar from "./components/NavbarUser";
+import EventItem from "../common/components/EventItem";
+import Filters from "../admin/components/Filters";
+// import "../../admin/EventsPage.css";
+import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
 import "./UserEventPAge.css";
 
 interface Event {

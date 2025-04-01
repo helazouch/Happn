@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import "./NavbarParticipant.css";
-import LogoutButtonP from "../components/LogoutButtonp";
+import LogoutButtonP from "../../common/components/LogoutButton";
 import profileIcon from "/profile.png"; // Adjust path to your image
+import { useNavigationServiceParticipantNavBar } from "../../../RoutingLayer/navigation/NavigationServiceParticipantNavBar";
 
 const NavbarParticipant: React.FC = () => {
+
+  const navigation = useNavigationServiceParticipantNavBar();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   return (
@@ -14,9 +17,9 @@ const NavbarParticipant: React.FC = () => {
 
       <div className="navbar-links-container">
         <ul className="navbar-links">
-          <li>Events</li>
-          <li>Profile</li>
-          <li>Participation</li>
+          <li onClick={navigation.goToEvents}>Events</li>
+          <li onClick={navigation.goToProfile}>Profile</li>
+          <li onClick={navigation.goToParticipation}>Participation</li>
         </ul>
         <div className="navbar-links-underline"></div>
       </div>
