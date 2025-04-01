@@ -12,6 +12,7 @@
   "dependencies": {
     "@firebase/app-compat": "^0.2.52",
     "@firebase/auth-compat": "^0.5.19",
+    "@firebase/firestore": "^4.7.10",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.8.1",
     "bootstrap": "^5.3.3",

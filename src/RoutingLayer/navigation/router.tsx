@@ -1,5 +1,10 @@
-import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+} from "react-router-dom";
 import { adminRoutes } from "./AdminNavBarRoutes";
+import { UserRoutes } from "./ParticipantRoutes";
 import { eventCreationRoutes } from "./EventCreationRoutes";
 import App from "../../App"; // Composant parent (layout principal)
 import { authRoutes } from "./authRoute";
@@ -13,6 +18,8 @@ export const router = createBrowserRouter(
       {adminRoutes}
       {eventCreationRoutes}
       {authRoutes}
+      {UserRoutes}
+
     </Route>
   )
 );
