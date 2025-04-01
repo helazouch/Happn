@@ -6,7 +6,7 @@ export const useNavigationServiceParticipantNavBar = () => {
   return {
     goToEvents: () => navigate("/user/events"),
     goToProfile: () => navigate("/user/profile"),
-    goToParticipation: () => navigate("/admin/participation"),
+    goToParticipation: () => navigate("/user/participation"),
   };
 
 }

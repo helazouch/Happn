@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Navbar from "./components/NavbarUser";
+import Navbar from "./components/NavbarParticipant";
 import EventItem from "../common/components/EventItem";
 import Filters from "../admin/components/Filters";
 // import "../../admin/EventsPage.css";

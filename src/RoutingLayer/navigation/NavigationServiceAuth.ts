@@ -10,7 +10,7 @@ export const useNavigationServiceAuth = () => {
         sessionStorage.setItem("userId", userUid);
         sessionStorage.setItem("userEmail", userEmail || "");
         sessionStorage.setItem("connexion", test)  //1 email   2google
-        navigate("/participant/dashboard");
+        navigate("/user/events");
     },
     goToAdminDashboard: (userUid:string,userEmail:string,test:string) => {
         sessionStorage.setItem("userId", userUid);
