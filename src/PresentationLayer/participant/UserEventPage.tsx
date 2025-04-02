@@ -1,69 +1,12 @@
 import { useState, useEffect } from "react";
-import Navbar from "./components/NavbarParticipant";
+import Navbar from "../admin/components/Navbar";
 import EventItem from "../common/components/EventItem";
 import Filters from "../admin/components/Filters";
-// import "../../admin/EventsPage.css";
+import { db } from "../../ServiceLayer/firebase/firebaseConfig"; // Import your Firebase config here
+import { collection, getDocs, Timestamp } from "firebase/firestore"; // Firebase Firestore functions
 import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
-import "./UserEventPAge.css";
-
-interface Event {
-  date: string;
-  month: string;
-  title: string;
-  image: string;
-  category: string;
-  price: number;
-  weekday: string;
-}
-
-const allEvents: Event[] = [
-  // Your existing events data
-  {
-    date: "14",
-    month: "APR",
-    title: "Wonder Girls 2010 Wonder Girls World Tour San Francisco",
-    image: "/src/assets/event1.jpg",
-    category: "Cultural & Entertainment Events",
-    price: 50,
-    weekday: "Friday",
-  },
-  {
-    date: "20",
-    month: "AUG",
-    title: "JYJ 2011 JYJ Worldwide Concert Barcelona",
-    image: "/src/assets/event1.jpg",
-    category: "Cultural & Entertainment Events",
-    price: 75,
-    weekday: "Saturday",
-  },
-  {
-    date: "18",
-    month: "SEP",
-    title: "2011 Super Junior SM Town Live '10 World Tour New York City",
-    image: "/src/assets/event1.jpg",
-    category: "Cultural & Entertainment Events",
-    price: 100,
-    weekday: "Sunday",
-  },
-  {
-    date: "05",
-    month: "MAY",
-    title: "Spring Music Festival 2023",
-    image: "/src/assets/event1.jpg",
-    category: "Music Festivals",
-    price: 65,
-    weekday: "Friday",
-  },
-  {
-    date: "12",
-    month: "JUN",
-    title: "International Food Fair",
-    image: "/src/assets/event1.jpg",
-    category: "Food & Drink",
-    price: 30,
-    weekday: "Saturday",
-  },
-];
+import { Version } from "../../DataLayer/models/Version"; // Assuming the interface is in the models folder
+import "./UserEventPage.css";
 
 const UserEventsPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,59 +14,128 @@ const UserEventsPage = () => {
   const [filters, setFilters] = useState({
     weekdays: "Any",
     categories: [] as string[],
-    priceRange: [10, 100] as [number, number],
+    priceRange: [-Infinity, Infinity] as [number, number], // Initially no price filter
   });
-  const [visibleEvents, setVisibleEvents] = useState<Event[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const eventsPerPage = 3;
+
+  const [events, setEvents] = useState<Version[]>([]); // Store fetched events
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
+  const [showAllEvents, setShowAllEvents] = useState(false); // To track "Load More" button click
+
+  // Fetch events from Firebase Firestore
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "versions"));
+        const fetchedEvents: Version[] = querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id_version: doc.id,
+            versionName: data.versionName || "Unknown Version",
+            specificDescription: data.specificDescription || "No description",
+            date:
+              data.date instanceof Timestamp ? data.date.toDate() : new Date(),
+            place: data.place || "Unknown Place",
+            price: data.price || 0,
+            planning: data.planning || "Not Specified",
+            img: data.img || "/CyberHorizon.jpg",
+            nbparticipants: data.nbparticipants || 0,
+            capacity: data.capacity || 0,
+            plan_mediatique: data.plan_mediatique || "Not Specified",
+            eventId: data.eventId || "Unknown Event",
+            participants: data.participants || [],
+            categories: data.categories || [],
+          };
+        });
+
+        setEvents(fetchedEvents); // Update the state with fetched events
+      } catch (err) {
+        console.error("Error fetching events:", err);
+        setError("Failed to load events. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   // Apply filters
-  const filteredEvents = allEvents.filter((event) => {
+  const filteredEvents = events.filter((event) => {
     const matchesWeekday =
-      filters.weekdays === "Any" || event.weekday === filters.weekdays;
+      filters.weekdays === "Any" ||
+      event.date.toLocaleString("en-US", { weekday: "long" }) ===
+        filters.weekdays;
     const matchesCategory =
       filters.categories.length === 0 ||
-      filters.categories.includes(event.category);
+      filters.categories.some((category) =>
+        event.categories?.includes(category)
+      );
     const matchesPrice =
       event.price >= filters.priceRange[0] &&
       event.price <= filters.priceRange[1];
+
     return matchesWeekday && matchesCategory && matchesPrice;
   });
 
-  // Handle pagination and reset when filters change
-  useEffect(() => {
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [filters]);
-
-  // Update visible events when page or filtered events change
-  useEffect(() => {
-    setVisibleEvents(filteredEvents.slice(0, currentPage * eventsPerPage));
-  }, [filteredEvents, currentPage]);
-
-  const loadMoreEvents = () => {
-    setCurrentPage((prev) => prev + 1);
+  // Handle Load More button click
+  const handleLoadMore = () => {
+    setShowAllEvents(true);
   };
-
-  const hasMoreEvents = visibleEvents.length < filteredEvents.length;
 
   return (
     <div className="events-page">
       <Navbar />
       <div className="events-layout">
-        <Filters
-          onFilterChange={(newFilters) => {
-            setFilters(newFilters);
-          }}
-        />
+        <Filters onFilterChange={setFilters} />
         <div className="events-content">
           <h1 className="page-title">Our Events</h1>
+
+          {/* Show loading message */}
+          {loading && <p>Loading events...</p>}
+
+          {/* Show error message */}
+          {error && <p className="error-message">{error}</p>}
+
           <div className="events-container">
-            {visibleEvents.map((event, index) => (
-              <EventItem key={index} {...event} variant="participate" />
-            ))}
+            {filteredEvents.length > 0
+              ? (showAllEvents
+                  ? filteredEvents
+                  : filteredEvents.slice(0, 3)
+                ).map((event, index) => {
+                  // Map the missing properties for EventItem
+                  const eventProps = {
+                    ...event,
+                    month: event.date.toLocaleString("en-US", {
+                      month: "short",
+                    }),
+                    title: event.versionName, // You can use versionName as title or customize this as needed
+                    image: event.img || "/src/assets/default-event.jpg", // Assuming 'img' contains the image URL
+                    weekday: event.date.toLocaleString("en-US", {
+                      weekday: "long",
+                    }), // Get weekday name
+                    date: (event.date instanceof Timestamp
+                      ? event.date.toDate()
+                      : event.date
+                    ).toLocaleDateString("en-US"), // Convert date to string
+                  };
+                  return (
+                    <EventItem
+                      key={index}
+                      {...eventProps}
+                      variant={"participate"}
+                    />
+                  );
+                })
+              : !loading && <p>No events found.</p>}
           </div>
-          {hasMoreEvents && (
-            <button className="load-more-btn" onClick={loadMoreEvents}>
+
+          {/* Load More Button */}
+          {!showAllEvents && filteredEvents.length > 3 && (
+            <button className="load-more-btn" onClick={handleLoadMore}>
               Load More
             </button>
           )}
