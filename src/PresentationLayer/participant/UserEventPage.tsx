@@ -117,10 +117,13 @@ const UserEventsPage = () => {
                     weekday: event.date.toLocaleString("en-US", {
                       weekday: "long",
                     }), // Get weekday name
-                    date: (event.date instanceof Timestamp
-                      ? event.date.toDate()
-                      : event.date
-                    ).toLocaleDateString("en-US"), // Convert date to string
+                    date: String(
+                      (event.date instanceof Timestamp
+                        ? event.date.toDate()
+                        : event.date
+                      ).getDate()
+                    ),
+                    // Convert date to string
                   };
                   return (
                     <EventItem

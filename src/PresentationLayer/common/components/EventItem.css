@@ -8,92 +8,106 @@
   display: flex;
   flex-direction: column;
 }
-
-.event-image {
-  width: 742px;
-  height: 700px;
+.event-image1 {
+  max-width: 300px;
+  height: auto;
   object-fit: cover;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
 }
-
 .event-content {
-  padding: 16px;
+  margin-top: 20px;
+  padding: 10px;
 }
 
 .event-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: space-between;
+  gap: 50px;
 }
 
 .event-date {
-  background-color: #f3f3f3;
-  padding: 8px;
-  border-radius: 6px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 16px;
+  color: gray;
 }
 
 .month {
-  display: block;
-  font-size: 12px;
   font-weight: bold;
-  color: gray;
+  font-size: 14px;
+  text-transform: uppercase;
 }
 
 .date {
-  display: block;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
+  color: #333;
 }
 
 .event-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
+  color: #333;
+  flex-grow: 1;
 }
 
 .event-icons {
-  margin-top: 12px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.edit-icon {
-  color: blue;
-  cursor: pointer;
-}
-
-.delete-icon {
-  color: red;
-  cursor: pointer;
-}
-
-.participate-btn {
-  background-color: #8e44ad;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  width: 100%;
-  cursor: pointer;
-}
-
-.participate-btn:disabled {
-  background-color: gray;
-  cursor: not-allowed;
-}
-
-.capacity-info {
-  margin-top: 8px;
+  justify-content: center;
+  margin-top: 15px;
   color: gray;
 }
 
-.full {
+.event-icons .edit-icon {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.event-icons .delete-icon {
+  cursor: pointer;
+  color: gray;
+}
+
+.participate-btn {
+  padding: 8px 16px;
+  background-color: #c7029cfb;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.participate-btn:hover {
+  background-color: #2a25b5;
+}
+
+.error-message {
   color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.capacity-info-container {
+  margin-top: 10px;
+  font-size: 14px;
+  color: gray;
+}
+
+.capacity-info.full {
+  color: red;
+  font-weight: bold;
 }
 
 .full-badge {
-  font-weight: bold;
-  margin-left: 6px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  margin-left: 5px;
 }

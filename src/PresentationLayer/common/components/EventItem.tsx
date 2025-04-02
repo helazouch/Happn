@@ -7,6 +7,7 @@ import {
   increment,
   addDoc,
   collection,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../../../ServiceLayer/firebase/firebaseConfig.ts";
 import { useAuth } from "../../../Contexts/AuthContext.tsx";
@@ -32,14 +33,14 @@ const EventItem: React.FC<EventItemProps> = ({
   month,
   title,
   image,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  price,
   capacity,
-  nbparticipants,
+  nbparticipants = 0,
   variant = "default",
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentParticipants, setCurrentParticipants] =
+    useState(nbparticipants); // Dynamic state
   const { currentUser } = useAuth();
 
   const handleParticipate = async () => {
@@ -53,37 +54,59 @@ const EventItem: React.FC<EventItemProps> = ({
       return;
     }
 
-    if (
-      capacity !== undefined &&
-      nbparticipants !== undefined &&
-      nbparticipants >= capacity
-    ) {
-      setError("This event has reached maximum capacity");
-      return;
-    }
-
     setIsLoading(true);
     setError("");
 
+    const eventRef = doc(db, "versions", id_version);
+
     try {
-      await updateDoc(doc(db, "versions", id_version), {
-        participants: arrayUnion(currentUser.uid),
-        nbparticipants: increment(1),
-      });
+      const eventSnapshot = await getDoc(eventRef);
 
-      await addDoc(collection(db, "participations"), {
-        versionId: id_version,
-        eventId: eventId,
-        participantId: currentUser.uid,
-        joinedAt: new Date(),
-        paymentSubmitted: false,
-        paymentVerified: false,
-        status: "pending_payment",
-      });
+      if (eventSnapshot.exists()) {
+        const eventData = eventSnapshot.data();
 
-      alert(
-        "Successfully registered! Please submit your payment proof within 48 hours."
-      );
+        // Check if the user is already registered
+        if (
+          eventData.participants &&
+          eventData.participants.includes(currentUser.uid)
+        ) {
+          setError("You're already registered for this event");
+          setIsLoading(false);
+          return;
+        }
+
+        // Check if event is full
+        if (capacity !== undefined && currentParticipants >= capacity) {
+          setError("This event has reached maximum capacity");
+          setIsLoading(false);
+          return;
+        }
+
+        // Proceed with registration
+        await updateDoc(eventRef, {
+          participants: arrayUnion(currentUser.uid),
+          nbparticipants: increment(1),
+        });
+
+        await addDoc(collection(db, "participations"), {
+          versionId: id_version,
+          eventId: eventId,
+          participantId: currentUser.uid,
+          joinedAt: new Date(),
+          paymentSubmitted: false,
+          paymentVerified: false,
+          status: "pending_payment",
+        });
+
+        // Update the participant count locally
+        setCurrentParticipants((prev) => prev + 1);
+
+        alert(
+          "Successfully registered! Please submit your payment proof within 48 hours."
+        );
+      } else {
+        setError("Event not found");
+      }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError("Failed to register for event. Please try again.");
@@ -94,7 +117,8 @@ const EventItem: React.FC<EventItemProps> = ({
 
   return (
     <div className={`event-card ${variant}`}>
-      <img src={image} alt={title} className="event-image" />
+      <img src={image} alt={title} className="event-image1" />
+
       <div className="event-content">
         <div className="event-header">
           <div className="event-date">
@@ -117,23 +141,21 @@ const EventItem: React.FC<EventItemProps> = ({
                 onClick={handleParticipate}
                 disabled={
                   isLoading ||
-                  (capacity !== undefined &&
-                    nbparticipants !== undefined &&
-                    nbparticipants >= capacity)
+                  (capacity !== undefined && currentParticipants >= capacity)
                 }
               >
                 {isLoading ? "Processing..." : "Participate"}
               </button>
               {error && <div className="error-message">{error}</div>}
               <div className="capacity-info-container">
-                {capacity !== undefined && nbparticipants !== undefined && (
+                {capacity !== undefined && (
                   <div
                     className={`capacity-info ${
-                      nbparticipants >= capacity ? "full" : ""
+                      currentParticipants >= capacity ? "full" : ""
                     }`}
                   >
-                    {nbparticipants}/{capacity} participants
-                    {nbparticipants >= capacity && (
+                    {currentParticipants}/{capacity} participants
+                    {currentParticipants >= capacity && (
                       <span className="full-badge">FULL</span>
                     )}
                   </div>
