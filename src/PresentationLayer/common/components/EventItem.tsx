@@ -95,7 +95,7 @@ const EventItem: React.FC<EventItemProps> = ({
           joinedAt: new Date(),
           paymentSubmitted: false,
           paymentVerified: false,
-          status: "pending_payment",
+          status: "no_payement",
         });
 
         // Update the participant count locally

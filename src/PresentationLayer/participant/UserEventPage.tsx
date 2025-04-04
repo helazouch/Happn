@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Navbar from "../admin/components/Navbar";
+import NavbarParticipant from "./components/NavbarParticipant";
 import EventItem from "../common/components/EventItem";
 import Filters from "../admin/components/Filters";
 import { db } from "../../ServiceLayer/firebase/firebaseConfig"; // Import your Firebase config here
@@ -88,7 +88,7 @@ const UserEventsPage = () => {
 
   return (
     <div className="events-page">
-      <Navbar />
+      <NavbarParticipant />
       <div className="events-layout">
         <Filters onFilterChange={setFilters} />
         <div className="events-content">
