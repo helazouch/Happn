@@ -44,6 +44,13 @@ export const useNavigationServiceEvent = () => {
       sessionStorage.setItem("newEventOrganizer", organizer);
       sessionStorage.setItem("newEventDescription", description);
       navigate("/events/new/finalize");
-    }
+    },
+
+    cancelAndReturnToAddEvent1: () => {
+      sessionStorage.removeItem("newEventName");
+      sessionStorage.removeItem("newEventOrganizer");
+      sessionStorage.removeItem("newEventDescription");
+      navigate("/events/new"); 
+    },
   };
 };

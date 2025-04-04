@@ -7,7 +7,7 @@ import { Version } from "../../DataLayer/models/Version";
 
 export class EventService {
   static async createEvent(eventData: Omit<Event, "id_event">): Promise<string> {
-    this.validateEventData(eventData); // Validation moved here
+    this.validateEventData(eventData);
     
     try {
       const enrichedData = {
@@ -31,12 +31,9 @@ export class EventService {
 
   private static handleEventError(error: unknown): void {
     console.error("[EventService] Error:", error);
-    // Add error transformation logic here if needed
   }
 
-
-
-  static async getEventExistence(eventName: string): Promise<boolean > {
+  static async getEventExistence(eventName: string): Promise<boolean> {
     try {
       const test = await EventRepository.nameExists(eventName);
       return test;
@@ -46,18 +43,15 @@ export class EventService {
     }
   }
 
-
-
-  static async getEventId(eventName: string): Promise<string  > {
+  static async getEventId(eventName: string): Promise<string> {
     try {
       const eventId = await EventRepository.getByName(eventName);
-      return eventId?? "";
+      return eventId ?? "";
     } catch (error) {
       console.error("[EventService] Error fetching event by name:", error);
       throw error;
     }
   }
-
 
   static async uploadEventFile(imageFile: File): Promise<string> {
     try {
@@ -68,10 +62,12 @@ export class EventService {
     }
   }
 
-  static async createAndAttachVersion(eventId: string, versionData: Omit<Version, 'id_version'>): Promise<string> {
+  static async createAndAttachVersion(
+    eventId: string, 
+    versionData: Omit<Version, 'id_version'>
+  ): Promise<string> {
     try {
-      const versionId=await Connector.createAndAttachVersion(eventId,versionData);
-
+      const versionId = await Connector.createAndAttachVersion(eventId, versionData);
       return versionId;
     } catch (error) {
       console.error("[ServiceConnector] Error in createAndAttachVersion:", error);
@@ -79,4 +75,23 @@ export class EventService {
     }
   }
 
+  static async updateVersion(
+    versionId: string,
+    versionData: Partial<Omit<Version, 'id_version' | 'createdAt'>>
+  ): Promise<void> {
+    try {
+      // Validate required fields
+      if (!versionId) throw new Error("Version ID is required");
+      
+      const dataToUpdate = {
+        ...versionData,
+        updatedAt: new Date().toISOString()
+      };
+
+      await FirebaseService.updateVersion(versionId, dataToUpdate);
+    } catch (error) {
+      console.error("[EventService] Error updating version:", error);
+      throw new Error("Failed to update version");
+    }
+  }
 }

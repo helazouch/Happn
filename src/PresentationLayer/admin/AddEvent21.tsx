@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "./components/Navbar";
 import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
 import { ServiceConnector } from "../../RoutingLayer/apiRoutes/eventRoute";
 import "./AddEvent21.css";
@@ -36,8 +35,8 @@ const AddEvent21: React.FC = () => {
         categories: [],
         versions: [],
       });
-      
-      navigation.saveDetailsAndGoToAddEvent3(eventId,organizer, description);
+
+      navigation.saveDetailsAndGoToAddEvent3(eventId, organizer, description);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Event creation failed";
@@ -48,9 +47,12 @@ const AddEvent21: React.FC = () => {
     }
   };
 
+  const handleCancel = () => {
+    navigation.cancelAndReturnToAddEvent1();
+  };
+
   return (
     <div className="main-content">
-      <Navbar />
       <div className="main-content21">
         <h2 id="titre">{eventName}</h2>
 
@@ -75,20 +77,29 @@ const AddEvent21: React.FC = () => {
 
         {error && <div className="error-message">{error}</div>}
 
-        <button
-          onClick={handleSubmit}
-          className="next-button21"
-          disabled={!organizer.trim() || !description.trim() || isLoading}
-        >
-          {isLoading ? (
-            <>
-              <span className="spinner"></span>
-              Creating...
-            </>
-          ) : (
-            "Next"
-          )}
-        </button>
+        <div className="actions-container21">
+          <span
+            onClick={handleCancel}
+            className="cancel-text21"
+            style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+          >
+            Cancel
+          </span>
+          <button
+            onClick={handleSubmit}
+            className="next-button21"
+            disabled={!organizer.trim() || !description.trim() || isLoading}
+          >
+            {isLoading ? (
+              <>
+                <span className="spinner"></span>
+                Creating...
+              </>
+            ) : (
+              "Next"
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
