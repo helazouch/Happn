@@ -3,11 +3,11 @@ import Navbar from "./components/Navbar";
 import ConfirmationModal from "./ConfirmationModal";
 import { Timestamp } from "firebase/firestore";
 import { Version } from "../../DataLayer/models/Version";
-import { FirebaseService } from "../../ServiceLayer/firebase/FirebaseService";
 import { useNavigationServiceAdminNavBar } from "../../RoutingLayer/navigation/NavigationServiceAdminNavBar";
 import "./AddEvent3.css";
 import "./ConfirmationModal.css";
 import { ServiceConnector } from "../../RoutingLayer/apiRoutes/eventRoute";
+import { CloudinaryService } from "../../ServiceLayer/cloudinary/Upload";
 
 interface ConfirmationData {
   place: string;
@@ -38,8 +38,8 @@ const AddEvent3: React.FC = () => {
     categories: [],
   });
 
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [planningFile, setPlanningFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [planningUrl, setPlanningUrl] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -84,15 +84,25 @@ const AddEvent3: React.FC = () => {
     });
   };
 
+  const handleFileUpload = async (file: File, setUrl: (url: string) => void) => {
+    try {
+      const url = await CloudinaryService.uploadImage(file);
+      setUrl(url);
+    } catch (error) {
+      setError("File upload failed");
+    }
+  };
+
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      setImageFile(e.target.files[0]);
+      handleFileUpload(e.target.files[0], setImageUrl);
     }
   };
 
   const handlePlanningChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      setPlanningFile(e.target.files[0]);
+      handleFileUpload(e.target.files[0], setPlanningUrl);
     }
   };
 
@@ -112,18 +122,14 @@ const AddEvent3: React.FC = () => {
 
     try {
       // 1. Upload files first
-      const [imgUrl, planningUrl] = await Promise.all([
-        imageFile ? ServiceConnector.uploadEventFile(imageFile) : "",
-        planningFile
-          ? ServiceConnector.uploadEventFile(planningFile)
-          : "",
-      ]);
+      alert(imageUrl);
+      alert(planningUrl);
 
       // 2. Prepare version data for Firestore
       const versionToCreate = {
         ...versionData,
         date: Timestamp.fromDate(getDateObject(versionData.date)), // Convert to Timestamp
-        img: imgUrl,
+        img: imageUrl,
         planning: planningUrl,
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
@@ -164,10 +170,9 @@ const AddEvent3: React.FC = () => {
 
   return (
     <div className="page-container">
+      {error && <div className="error-message">{error}</div>}
       <Navbar />
       <div className="main-content3">
-        {error && <div className="error-message">{error}</div>}
-
         {/* First Column */}
         <div className="column">
           <div className="form-section">
@@ -316,3 +321,7 @@ const AddEvent3: React.FC = () => {
 };
 
 export default AddEvent3;
+function setImageUrl(url: string): void {
+  throw new Error("Function not implemented.");
+}
+

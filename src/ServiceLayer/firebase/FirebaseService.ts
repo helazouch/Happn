@@ -37,19 +37,19 @@ export class FirebaseService {
     }
   }
 
-  static async uploadFile(file: File, folder: string): Promise<string> {
-    try {
-      const fileRef = ref(storage, `${folder}/${Date.now()}_${file.name}`);
-      await uploadBytesResumable(fileRef, file);
-      return await getDownloadURL(fileRef);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(`File upload failed: ${error.message}`);
-      }
-      throw new Error("Unknown file upload error occurred");
-    }
+  // static async uploadFile(file: File, folder: string): Promise<string> {
+  //   try {
+  //     const fileRef = ref(storage, `${folder}/${Date.now()}_${file.name}`);
+  //     await uploadBytesResumable(fileRef, file);
+  //     return await getDownloadURL(fileRef);
+  //   } catch (error: unknown) {
+  //     if (error instanceof Error) {
+  //       throw new Error(`File upload failed: ${error.message}`);
+  //     }
+  //     throw new Error("Unknown file upload error occurred");
+  //   }
   
-  }
+  // }
   static async createVersion(versionData: Omit<Version, 'id_version'>): Promise<string> {
     try {
       const docRef = await addDoc(collection(db, "versions"), {
