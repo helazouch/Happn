@@ -8,6 +8,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -15,21 +16,23 @@ const SignUp = () => {
     setError("");
 
     if (password !== confirmPassword) {
-      alert("Les mots de passe ne correspondent pas.")
+      alert("Les mots de passe ne correspondent pas.");
       setError("Les mots de passe ne correspondent pas.");
       return;
     }
 
     try {
-      const { user, isSpecialUser } = await ServiceConnector.signUpWithEmail(email,password)
+      const { user, isSpecialUser } = await ServiceConnector.signUpWithEmail(
+        email,
+        password
+      );
       alert("Compte créé avec succès ! et le user id est");
       alert(user.uid);
       alert(user.email);
-      if (isSpecialUser){
-        navigation.goToAdminDashboard(user.uid,user.email||"","1");
-      }
-      else {
-        navigation.goToParticipantDashboard(user.uid,user.email||"","1");
+      if (isSpecialUser) {
+        navigation.goToAdminDashboard(user.uid, user.email || "", "1");
+      } else {
+        navigation.goToParticipantDashboard(user.uid, user.email || "", "1");
       }
     } catch (err) {
       if (err instanceof Error) {
@@ -42,16 +45,15 @@ const SignUp = () => {
 
   const handleGoogleSignUp = async () => {
     try {
-      const { user, isSpecialUser }= await ServiceConnector.signWithGoogle();
-    alert("Connexion avec Google réussie !");
-    alert(user.uid)
-    alert(user.email)
-    if (isSpecialUser){
-      navigation.goToAdminDashboard(user.uid,user.email||"","2");
-    }
-    else {
-      navigation.goToParticipantDashboard(user.uid,user.email||"","2");
-    }
+      const { user, isSpecialUser } = await ServiceConnector.signWithGoogle();
+      alert("Connexion avec Google réussie !");
+      alert(user.uid);
+      alert(user.email);
+      if (isSpecialUser) {
+        navigation.goToAdminDashboard(user.uid, user.email || "", "2");
+      } else {
+        navigation.goToParticipantDashboard(user.uid, user.email || "", "2");
+      }
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -63,22 +65,21 @@ const SignUp = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-    <div className="sign-up-container">
-      {/* Left Column - Sign Up Form */}
-      <div className="sign-up-form-column">
-        <div className="sign-up-form-box">
-          <button
-            className="google-btn"
-            onClick={handleGoogleSignUp}
-            type="button"
-          >
-            <FaGoogle className="google-icon" />
-            Register with Google
-          </button>
+      <div className="sign-up-container">
+        {/* Left Column - Sign Up Form */}
+        <div className="sign-up-form-column">
+          <div className="sign-up-form-box">
+            <button
+              className="google-btn"
+              onClick={handleGoogleSignUp}
+              type="button"
+            >
+              <FaGoogle className="google-icon" />
+              Register with Google
+            </button>
 
-          <div className="divider">or</div>
+            <div className="divider">or</div>
 
-  
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
@@ -111,42 +112,45 @@ const SignUp = () => {
                 Have an account? <a onClick={navigation.goToSignIn}>Sign in</a>
               </span>
             </div>
-          
-        </div>
-      </div>
-
-      {/* Right Column - Image and Additional Form */}
-      <div className="right-column">
-        {/* Image Row */}
-        <div className="image-row">
-          <img src="Happn.png" alt="Sign up visual" className="sign-up-image" />
+          </div>
         </div>
 
-        {/* Confirm Password Row */}
-        <div className="confirm-password-box">
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your password"
-              required
+        {/* Right Column - Image and Additional Form */}
+        <div className="right-column">
+          {/* Image Row */}
+          <div className="image-row">
+            <img
+              src="Happn.png"
+              alt="Sign up visual"
+              className="sign-up-image"
             />
           </div>
 
-          <div className="secondary-action-row">
-            {/* <span className="have-account">
+          {/* Confirm Password Row */}
+          <div className="confirm-password-box">
+            <div className="form-group">
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm your password"
+                required
+              />
+            </div>
+
+            <div className="secondary-action-row">
+              {/* <span className="have-account">
               Have an account? <a href="#">Sign in</a>
             </span> */}
-            <button type="submit" className="sign-up-btn">
+              <button type="submit" className="sign-up-btn">
                 Sign Up
-            </button>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </form>
   );
 };

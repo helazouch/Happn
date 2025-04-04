@@ -37,6 +37,7 @@ export class FirebaseService {
     }
   }
 
+
   // static async uploadFile(file: File, folder: string): Promise<string> {
   //   try {
   //     const fileRef = ref(storage, `${folder}/${Date.now()}_${file.name}`);
@@ -50,6 +51,7 @@ export class FirebaseService {
   //   }
   
   // }
+
   static async createVersion(versionData: Omit<Version, 'id_version'>): Promise<string> {
     try {
       const docRef = await addDoc(collection(db, "versions"), {
@@ -64,7 +66,35 @@ export class FirebaseService {
       throw new Error("Failed to create version");
     }
   }
+
+  static async updateVersion(
+    versionId: string,
+    versionData: Partial<Omit<Version, 'id_version'>>
+  ): Promise<void> {
+    try {
+      const versionRef = doc(db, "versions", versionId);
+      
+      // Prepare the update data with proper typing
+      const updateData: {
+        [K in keyof Omit<Version, 'id_version'>]?: Version[K] extends Date 
+          ? Timestamp | Date 
+          : Version[K];
+      } & { updatedAt: Timestamp } = {
+        ...versionData,
+        updatedAt: Timestamp.now()
+      };
   
+      // Convert Date fields to Timestamp
+      if (updateData.date instanceof Date) {
+        updateData.date = Timestamp.fromDate(updateData.date);
+      }
+  
+      await updateDoc(versionRef, updateData);
+    } catch (error) {
+      console.error("Version update error:", error);
+      throw new Error("Failed to update version");
+    }
+  }
 
   static async addVersionToEvent(eventId: string, versionId: string): Promise<void> {
     try {
@@ -78,14 +108,12 @@ export class FirebaseService {
       throw new Error("Failed to update event with new version");
     }
   }
+
   static async signUpWithEmail(email: string, password: string): Promise<{ user: User; isSpecialUser: boolean }> {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      // Liste des emails autorisés
       const specialEmails = ["lindachrigui03@gmail.com", "zouchhend1@gmail.com"];
-      
-      // Vérifier si l'email est dans la liste
       const isSpecialUser = specialEmails.includes(user.email || "");
       return { user, isSpecialUser };
     } catch (error) {
@@ -93,49 +121,30 @@ export class FirebaseService {
       throw error;
     }
   }
-
-
-
 
   static async signWithGoogle(): Promise<{ user: User; isSpecialUser: boolean }> {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const user = userCredential.user;
-
-      // Liste des emails autorisés
       const specialEmails = ["lindachrigui03@gmail.com", "zouchhend1@gmail.com"];
-      
-      // Vérifier si l'email est dans la liste
       const isSpecialUser = specialEmails.includes(user.email || "");
-
       return { user, isSpecialUser };
     } catch (error) {
       console.error("Error during sign-in:", error);
       throw error;
     }
-}
-
-
-
-
+  }
 
   static async signInWithEmail(email: string, password: string): Promise<{ user: User; isSpecialUser: boolean }> {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      // Liste des emails autorisés
       const specialEmails = ["lindachrigui03@gmail.com", "zouchhend1@gmail.com"];
-      
-      // Vérifier si l'email est dans la liste
       const isSpecialUser = specialEmails.includes(user.email || "");
-
       return { user, isSpecialUser };
     } catch (error) {
       console.error("Error during sign-up:", error);
       throw error;
     }
   }
-
-
-
 }

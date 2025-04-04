@@ -1,0 +1,220 @@
+/* Participation.css */
+
+/* Main Layout */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+  }
+  
+  .content-container {
+    flex: 1;
+    padding: 2rem;
+    margin-left: 100px;
+    margin-right: 100px; /* Adjust based on your navbar width */
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 2rem;
+  }
+  
+  /* Participation List */
+  .participation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .participation-item {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .participation-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Date Column */
+  .date-column {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .date-format {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 600;
+  }
+  
+  .date-format .month {
+    font-size: 0.75rem;
+    color: #0c56c4;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .date-format .day {
+    font-size: 1.5rem;
+    color: #2d3748;
+  }
+  
+  /* Info Column */
+  .info-column {
+    width: 35%;
+    padding: 0 1.5rem;
+  }
+  
+  .version-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+  }
+  
+  .invoice-link {
+    display: inline-block;
+    font-size: 0.875rem;
+    color: #4299e1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .invoice-link:hover {
+    color: #2b6cb0;
+    text-decoration: underline;
+  }
+  
+  .invoice-submit {
+    font-weight: 500;
+  }
+  
+  /* Status Column */
+  .status-column {
+    width: 45%;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .status-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    position: relative;
+  }
+  
+  .status-circle::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.75rem;
+  }
+  
+  .status-circle.participation {
+    background-color: #48bb78; /* Green */
+  }
+  
+  .status-circle.payment {
+    background-color: #4299e1; /* Blue */
+  }
+  
+  .status-circle.confirmation {
+    background-color: #9f7aea; /* Purple */
+  }
+  
+  .status-circle.pending {
+    background-color: #e2e8f0; /* Light gray */
+    border: 2px solid #cbd5e0;
+  }
+  
+  .status-circle.pending::after {
+    content: '';
+  }
+  
+  .status-label {
+    font-size: 0.75rem;
+    color: #718096;
+    min-width: 80px;
+  }
+  
+  /* Empty and Loading States */
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #718096;
+    font-size: 1.1rem;
+  }
+  
+  .loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #718096;
+  }
+  
+  /* Modal Backdrop (if not already styled elsewhere) */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .content-container {
+      margin-left: 0;
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .participation-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .date-column,
+    .info-column,
+    .status-column {
+      width: 100%;
+      padding: 0;
+    }
+  
+    .status-column {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+  
+    .status-label {
+      min-width: auto;
+      margin-right: 1rem;
+    }
+  }

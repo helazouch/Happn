@@ -10,6 +10,7 @@
     margin-top: 20px;
     gap: 20px;
     padding: 0 20px;
+    margin-bottom: 5%;
   }
   
   .filters {
@@ -38,9 +39,9 @@
   }
   
   .page-title {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
-    margin-bottom: 20px;
+    padding: 10px;
   }
   
   .events-container {
@@ -49,17 +50,26 @@
     gap: 30px; /* Increased gap between cards */
     justify-content: center;
   }
+
+  .page-header-events{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-bottom: 2%;
+  }
+
+
   
   .add-event-btn {
     display: block;
-    margin: 40px auto; /* Increased margin for more space above and below the button */
-    padding: 10px 20px;
+    margin-left: 20px ; /* Increased margin for more space above and below the button */
+    padding: 7px 16px;
     background-color: transparent;
     color: #3D37F1;
     border: 2px solid #3D37F1;
-    border-radius: 25px;
+    border-radius: 30px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 30px;
     font-weight: bold;
     transition: background-color 0.3s ease, color 0.3s ease;
   }

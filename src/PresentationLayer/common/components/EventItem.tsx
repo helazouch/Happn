@@ -7,6 +7,8 @@ import {
   increment,
   addDoc,
   collection,
+  getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../../ServiceLayer/firebase/firebaseConfig.ts";
 import { useAuth } from "../../../Contexts/AuthContext.tsx";
@@ -15,16 +17,16 @@ import "./EventItem.css";
 type EventItemProps = {
   id_version?: string;
   eventId?: string;
-  date: string;
-  month: string;
-  title: string;
-  image: string;
+  date?: string;
+  month?: string;
+  title?: string;
+  image?: string;
   price: number;
   capacity?: number;
   nbparticipants?: number;
   variant?: "default" | "participate";
-  // Add test mode prop
-  testMode?: boolean;
+  onDelete?: (eventId: string) => void;
+  onModify?: (eventId: string) => void;
 };
 
 const EventItem: React.FC<EventItemProps> = ({
@@ -34,98 +36,111 @@ const EventItem: React.FC<EventItemProps> = ({
   month,
   title,
   image,
-  price,
   capacity,
-  nbparticipants,
+  nbparticipants = 0,
   variant = "default",
-  testMode = false, // Default to false for production
+  onDelete,
+  onModify,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentParticipants, setCurrentParticipants] =
+    useState(nbparticipants);
   const { currentUser } = useAuth();
 
   const handleParticipate = async () => {
-    console.log("[DEBUG] Participate button clicked");
-    console.log("[DEBUG] Current auth state:", { currentUser, testMode });
-
-    if (testMode) {
-      // Test mode behavior
-      console.log("[TEST] Would attempt participation with:", {
-        id_version,
-        eventId,
-        user: currentUser?.uid || "no-user",
-      });
-      alert("[TEST MODE] Participation would be registered");
-      return;
-    }
-
     if (!currentUser) {
       setError("You must be logged in to participate");
-      console.warn("[AUTH] No user logged in");
       return;
     }
 
     if (!id_version || !eventId) {
       setError("Event information is incomplete");
-      console.error("[DATA] Missing version or event ID");
-      return;
-    }
-
-    if (
-      capacity !== undefined &&
-      nbparticipants !== undefined &&
-      nbparticipants >= capacity
-    ) {
-      setError("This event has reached maximum capacity");
-      console.warn("[CAPACITY] Event full");
       return;
     }
 
     setIsLoading(true);
     setError("");
-    console.log("[LOADING] Starting participation process");
+
+    const eventRef = doc(db, "versions", id_version);
 
     try {
-      // Update version document
-      if (id_version) {
-        console.log("[FIRESTORE] Attempting to update version document");
-        await updateDoc(doc(db, "versions", id_version), {
+      const eventSnapshot = await getDoc(eventRef);
+
+      if (eventSnapshot.exists()) {
+        const eventData = eventSnapshot.data();
+
+        if (
+          eventData.participants &&
+          eventData.participants.includes(currentUser.uid)
+        ) {
+          setError("You're already registered for this event");
+          setIsLoading(false);
+          return;
+        }
+
+        if (capacity !== undefined && currentParticipants >= capacity) {
+          setError("This event has reached maximum capacity");
+          setIsLoading(false);
+          return;
+        }
+
+        await updateDoc(eventRef, {
           participants: arrayUnion(currentUser.uid),
           nbparticipants: increment(1),
         });
-        console.log("[SUCCESS] Version document updated");
+
+        await addDoc(collection(db, "participations"), {
+          versionId: id_version,
+          eventId: eventId,
+          participantId: currentUser.uid,
+          joinedAt: new Date(),
+          paymentSubmitted: false,
+          paymentVerified: false,
+          status: "no_payement",
+        });
+
+        setCurrentParticipants((prev) => prev + 1);
+        alert(
+          "Successfully registered! Please submit your payment proof within 48 hours."
+        );
+      } else {
+        setError("Event not found");
       }
-
-      // Create participation record
-      console.log("[FIRESTORE] Creating participation record");
-      await addDoc(collection(db, "participations"), {
-        versionId: id_version,
-        eventId: eventId,
-        participantId: currentUser.uid,
-        joinedAt: new Date(),
-        paymentSubmitted: false,
-        paymentVerified: false,
-        status: "pending_payment",
-      });
-      console.log("[SUCCESS] Participation record created");
-
-      alert(
-        "Successfully registered! Please submit your payment proof within 48 hours."
-      );
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      const errorMsg = "Failed to register for event. Please try again.";
-      setError(errorMsg);
-      console.error("[ERROR]", err);
-      console.error("[FULL ERROR]", JSON.stringify(err, null, 2));
+      setError("Failed to register for event. Please try again.");
     } finally {
       setIsLoading(false);
-      console.log("[LOADING] Participation process completed");
     }
+  };
+
+  const handleDelete = async () => {
+    if (!id_version) return;
+
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      setIsLoading(true);
+      try {
+        await deleteDoc(doc(db, "versions", id_version));
+        onDelete?.(id_version);
+      } catch (err) {
+        setError("Failed to delete event");
+        console.error("Delete error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleModify = () => {
+    if (!id_version) return;
+    onModify?.(id_version);
   };
 
   return (
     <div className={`event-card ${variant}`}>
-      <img src={image} alt={title} className="event-image" />
+      <img src={image} alt={title} className="event-image1" />
+
       <div className="event-content">
         <div className="event-header">
           <div className="event-date">
@@ -134,13 +149,25 @@ const EventItem: React.FC<EventItemProps> = ({
           </div>
           <div className="event-title">{title}</div>
         </div>
-        <div className="event-price">{price} DT</div>
+
         <div className="event-icons">
           {variant === "default" ? (
-            <>
-              <FaRegEdit className="edit-icon" />
-              <FaTrash className="delete-icon" />
-            </>
+            <div className="admin-actions">
+              <button
+                className="action-button"
+                onClick={handleModify}
+                disabled={isLoading}
+              >
+                <FaRegEdit className="edit-icon" />
+              </button>
+              <button
+                className="action-button"
+                onClick={handleDelete}
+                disabled={isLoading}
+              >
+                <FaTrash className="delete-icon" />
+              </button>
+            </div>
           ) : (
             <div className="participation-section">
               <button
@@ -148,42 +175,30 @@ const EventItem: React.FC<EventItemProps> = ({
                 onClick={handleParticipate}
                 disabled={
                   isLoading ||
-                  (capacity !== undefined &&
-                    nbparticipants !== undefined &&
-                    nbparticipants >= capacity)
+                  (capacity !== undefined && currentParticipants >= capacity)
                 }
-                data-testid="participate-button"
               >
                 {isLoading ? "Processing..." : "Participate"}
-                {testMode && " (Test Mode)"}
               </button>
-              {error && (
-                <div className="error-message" data-testid="error-message">
-                  {error}
-                </div>
-              )}
-              {capacity !== undefined && nbparticipants !== undefined && (
-                <div
-                  className={`capacity-info ${
-                    nbparticipants >= capacity ? "full" : ""
-                  }`}
-                  data-testid="capacity-info"
-                >
-                  {nbparticipants}/{capacity} participants
-                  {nbparticipants >= capacity && (
-                    <span className="full-badge">FULL</span>
-                  )}
-                </div>
-              )}
+              {error && <div className="error-message">{error}</div>}
+              <div className="capacity-info-container">
+                {capacity !== undefined && (
+                  <div
+                    className={`capacity-info ${
+                      currentParticipants >= capacity ? "full" : ""
+                    }`}
+                  >
+                    {currentParticipants}/{capacity} participants
+                    {currentParticipants >= capacity && (
+                      <span className="full-badge">FULL</span>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
       </div>
-      {testMode && (
-        <div className="test-mode-banner">
-          TEST MODE ACTIVE - No real database operations
-        </div>
-      )}
     </div>
   );
 };

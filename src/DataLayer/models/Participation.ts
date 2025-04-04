@@ -7,5 +7,5 @@ export interface Participation {
     paymentSubmitted: boolean;
     paymentVerified: boolean;
     paymentProofUrl?: string;
-    status: "pending_payment" | "confirmed" | "cancelled";
+    status: "no_payement" | "pending_payment" | "confirmed" | "cancelled";
   }

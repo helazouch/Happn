@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "./components/Navbar";
+//import Navbar from "./components/Navbar";
 import ConfirmationModal from "./ConfirmationModal";
 import { Timestamp } from "firebase/firestore";
 import { Version } from "../../DataLayer/models/Version";
@@ -136,7 +136,10 @@ const AddEvent3: React.FC = () => {
       };
 
       // 3. Create version in Firestore
-      const versionId = await ServiceConnector.createAndAttachVersion(eventId,versionToCreate);
+      const versionId = await ServiceConnector.createAndAttachVersion(
+        eventId,
+        versionToCreate
+      );
       alert(` Version created successfully!\nVersion ID: ${versionId}`);
       navigation.goToEvents();
     } catch (err) {
@@ -170,11 +173,21 @@ const AddEvent3: React.FC = () => {
 
   return (
     <div className="page-container">
+
       {error && <div className="error-message">{error}</div>}
-      <Navbar />
       <div className="main-content3">
         {/* First Column */}
         <div className="column">
+          <div className="form-section">
+            <h2 className="form-section-h2">VERSION NAME:</h2>
+            <input
+              type="text"
+              placeholder="Enter version name"
+              value={versionData.versionName}
+              onChange={handleInputChange("versionName")}
+              required
+            />
+          </div>
           <div className="form-section">
             <h2 className="form-section-h2">PLACE:</h2>
             <input
