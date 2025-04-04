@@ -8,6 +8,7 @@ import {
   addDoc,
   collection,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../../ServiceLayer/firebase/firebaseConfig.ts";
 import { useAuth } from "../../../Contexts/AuthContext.tsx";
@@ -24,6 +25,8 @@ type EventItemProps = {
   capacity?: number;
   nbparticipants?: number;
   variant?: "default" | "participate";
+  onDelete?: (eventId: string) => void;
+  onModify?: (eventId: string) => void;
 };
 
 const EventItem: React.FC<EventItemProps> = ({
@@ -36,11 +39,13 @@ const EventItem: React.FC<EventItemProps> = ({
   capacity,
   nbparticipants = 0,
   variant = "default",
+  onDelete,
+  onModify,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentParticipants, setCurrentParticipants] =
-    useState(nbparticipants); // Dynamic state
+    useState(nbparticipants);
   const { currentUser } = useAuth();
 
   const handleParticipate = async () => {
@@ -65,7 +70,6 @@ const EventItem: React.FC<EventItemProps> = ({
       if (eventSnapshot.exists()) {
         const eventData = eventSnapshot.data();
 
-        // Check if the user is already registered
         if (
           eventData.participants &&
           eventData.participants.includes(currentUser.uid)
@@ -75,14 +79,12 @@ const EventItem: React.FC<EventItemProps> = ({
           return;
         }
 
-        // Check if event is full
         if (capacity !== undefined && currentParticipants >= capacity) {
           setError("This event has reached maximum capacity");
           setIsLoading(false);
           return;
         }
 
-        // Proceed with registration
         await updateDoc(eventRef, {
           participants: arrayUnion(currentUser.uid),
           nbparticipants: increment(1),
@@ -98,9 +100,7 @@ const EventItem: React.FC<EventItemProps> = ({
           status: "no_payement",
         });
 
-        // Update the participant count locally
         setCurrentParticipants((prev) => prev + 1);
-
         alert(
           "Successfully registered! Please submit your payment proof within 48 hours."
         );
@@ -113,6 +113,28 @@ const EventItem: React.FC<EventItemProps> = ({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDelete = async () => {
+    if (!id_version) return;
+
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      setIsLoading(true);
+      try {
+        await deleteDoc(doc(db, "versions", id_version));
+        onDelete?.(id_version);
+      } catch (err) {
+        setError("Failed to delete event");
+        console.error("Delete error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleModify = () => {
+    if (!id_version) return;
+    onModify?.(id_version);
   };
 
   return (
@@ -130,10 +152,22 @@ const EventItem: React.FC<EventItemProps> = ({
 
         <div className="event-icons">
           {variant === "default" ? (
-            <>
-              <FaRegEdit className="edit-icon" />
-              <FaTrash className="delete-icon" />
-            </>
+            <div className="admin-actions">
+              <button
+                className="action-button"
+                onClick={handleModify}
+                disabled={isLoading}
+              >
+                <FaRegEdit className="edit-icon" />
+              </button>
+              <button
+                className="action-button"
+                onClick={handleDelete}
+                disabled={isLoading}
+              >
+                <FaTrash className="delete-icon" />
+              </button>
+            </div>
           ) : (
             <div className="participation-section">
               <button
