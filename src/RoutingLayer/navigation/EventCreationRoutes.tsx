@@ -8,5 +8,6 @@ export const eventCreationRoutes = (
     <Route path="/events/new" element={<AddEvent1 />} />
     <Route path="/events/new/details" element={<AddEvent21 />} />
     <Route path="/events/new/finalize" element={<AddEvent3 />} />
+    
   </>
 );

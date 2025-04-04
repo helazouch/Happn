@@ -1,175 +1,185 @@
 .login-container {
-    width: 90vw;
-    max-width: 1200px;
-    display: flex;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    margin: 2rem auto;
-  }
-  
-  .image-column {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-   
-  }
-  
-  .image-column img {
-    object-fit: cover;
-    border-radius: 5px;
-  }
-  
-  .login-column {
-    flex: 1;
-    max-width: 40vw;
-    border: 2px dashed black;
-    padding: 40px;
-    display: flex;
+  width: 1440px;
+  height: 600px;
+  max-width: 1440px;
+  display: flex;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 2rem auto;
+  margin-top: 180px;
+}
+
+.image-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+ 
+}
+
+.image-column img {
+  width: 100%;  /* Ajuste l'image pour occuper toute la largeur du conteneur */
+  height: auto;  /* Maintient le ratio de l'image */
+  max-width: 600px; /* Définit une largeur maximale */
+  max-height: 500px; /* Définit une hauteur maximale */
+  object-fit: contain; /* Ajuste l'image sans découper */
+  border-radius: 5px;
+}
+
+.login-column {
+  flex: 1;
+  max-width: 40vw;
+  height: 500px;
+  border: 2px dashed black;
+  padding: 40px;
+  margin-top: 45px;
+  margin-right: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.login-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: #242565;
+  text-align: center;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: transparent;
+  color: #242565;
+  border: 1px solid #242565;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+}
+
+.google-btn:hover {
+  background-color: #B4B4B4;
+}
+
+.google-icon {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #242565;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #777;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.divider::before {
+  margin-right: 10px;
+}
+
+.divider::after {
+  margin-left: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #F5167E;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #e91e63;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.signin-btn {
+  padding: 12px 24px;
+  background-color: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.signin-btn:hover {
+  background-color: #c2185b;
+}
+
+.create-account {
+  color: #777;
+}
+
+.create-account a {
+  color: #e91e63;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.create-account a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 992px) {
+  .login-container {
     flex-direction: column;
-    justify-content: center;
   }
 
-  
-  .login-title {
-    font-size: 24px;
-    margin-bottom: 30px;
-    color: #333;
-    text-align: center;
+  .image-column {
+    display: none;
   }
-  
-  .google-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    background-color: transparent;
-    color: #4285F4;
-    border: 1px solid #4285F4;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: all 0.3s;
+
+  .login-column {
+    max-width: 100%;
+    padding: 30px;
   }
-  
-  .google-btn:hover {
-    background-color: #f0f7ff;
+}
+
+@media (max-width: 768px) {
+  .login-column {
+    padding: 20px;
   }
-  
-  .google-icon {
-    margin-right: 10px;
-    font-size: 18px;
-  }
-  
-  .divider {
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-    color: #777;
-  }
-  
-  .divider::before,
-  .divider::after {
-    content: "";
-    flex: 1;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .divider::before {
-    margin-right: 10px;
-  }
-  
-  .divider::after {
-    margin-left: 10px;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 8px;
-    color: #F5167E;
-    font-weight: 500;
-  }
-  
-  input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  input:focus {
-    outline: none;
-    border-color: #e91e63;
-  }
-  
+
   .action-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 20px;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
   }
-  
-  .signin-btn {
-    padding: 12px 24px;
-    background-color: #e91e63;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .signin-btn:hover {
-    background-color: #c2185b;
-  }
-  
-  .create-account {
-    color: #777;
-  }
-  
-  .create-account a {
-    color: #e91e63;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  .create-account a:hover {
-    text-decoration: underline;
-  }
-  
-  @media (max-width: 992px) {
-    .login-container {
-      flex-direction: column;
-    }
-  
-    .image-column {
-      display: none;
-    }
-  
-    .login-column {
-      max-width: 100%;
-      padding: 30px;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .login-column {
-      padding: 20px;
-    }
-  
-    .action-row {
-      flex-direction: column;
-      gap: 15px;
-      align-items: flex-start;
-    }
-  }
+}

@@ -9,7 +9,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState("");
+  const [, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,9 +108,9 @@ const SignUp = () => {
               {/* <button type="submit" className="sign-up-btn">
                 Sign Up
               </button> */}
-              <span className="have-account">
+              {/* <span className="have-account">
                 Have an account? <a onClick={navigation.goToSignIn}>Sign in</a>
-              </span>
+              </span> */}
             </div>
           </div>
         </div>
@@ -141,9 +141,9 @@ const SignUp = () => {
             </div>
 
             <div className="secondary-action-row">
-              {/* <span className="have-account">
-              Have an account? <a href="#">Sign in</a>
-            </span> */}
+              <span className="have-account">
+              Have an account? <a onClick={navigation.goToSignIn}>Sign in</a>
+            </span>
               <button type="submit" className="sign-up-btn">
                 Sign Up
               </button>
