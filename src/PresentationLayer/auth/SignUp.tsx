@@ -8,7 +8,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {

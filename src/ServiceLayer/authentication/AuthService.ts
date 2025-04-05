@@ -13,8 +13,6 @@ export class AuthService {
     }
   }
 
-
-
   static async signWithGoogle(): Promise<{ user: User; isSpecialUser: boolean }> {
     try {
       const { user, isSpecialUser } =await Connector.signWithGoogle();

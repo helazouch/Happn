@@ -30,10 +30,10 @@ const ProfileSettings = () => {
           </div>
 
           <form className="profile-form">
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="username">Username</label>
               <input type="text" id="username" />
-            </div>
+            </div> */}
 
             <div className="form-group">
               <label htmlFor="email">Email</label>

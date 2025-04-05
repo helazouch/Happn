@@ -1,6 +1,6 @@
 .login-container {
-  width: 1440px;
-  height: 600px;
+  width: 1200px;
+  height: 500px;
   max-width: 1440px;
   display: flex;
   background-color: white;
@@ -8,7 +8,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin: 2rem auto;
-  margin-top: 180px;
+  margin-top: 100px;
 }
 
 .image-column {
@@ -31,12 +31,12 @@
 
 .login-column {
   flex: 1;
-  max-width: 40vw;
-  height: 500px;
+  max-width: 45vw;
+  height: 450px;
   border: 2px dashed black;
-  padding: 40px;
-  margin-top: 45px;
-  margin-right: 45px;
+  padding: 20px;
+  margin-top: 25px;
+  margin-right: 25px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -44,7 +44,7 @@
 
 
 .login-title {
-  font-size: 24px;
+  font-size: 16px;
   margin-bottom: 30px;
   color: #242565;
   text-align: center;
@@ -71,7 +71,7 @@
 
 .google-icon {
   margin-right: 10px;
-  font-size: 20px;
+  font-size: 16px;
   color: #242565;
 }
 
@@ -113,7 +113,7 @@ input {
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 input:focus {
@@ -134,7 +134,7 @@ input:focus {
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
 }

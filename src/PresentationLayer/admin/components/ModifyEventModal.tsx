@@ -9,6 +9,7 @@ interface ModifyEventModalProps {
   onClose: () => void;
   onSuccess: (updatedEvent: Version) => void;
   eventData: Version;
+  
 }
 
 const ModifyEventModal: React.FC<ModifyEventModalProps> = ({

@@ -1,6 +1,6 @@
 .sign-up-container {
-  width: 1440px;
-  height: 600px;
+  width: 1200px;
+  height: 500px;
   max-width: 1440px;
   display: flex;
   background-color: white;
@@ -8,7 +8,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin: 2rem auto;
-  margin-top: 180px;
+  margin-top: 100px;
 }
 
 .sign-up-form-column {
@@ -16,7 +16,7 @@
   flex: 1;
   padding: 40px;
   display: flex;
-  height: 600px;
+  height: 500px;
   justify-content: center;
   align-items: center;
   
@@ -53,12 +53,12 @@
   max-height: 300px; /* Définit une hauteur maximale */
   object-fit: contain; /* Ajuste l'image sans découper */
   border-radius: 5px;
-  margin-bottom: -30px;
-  margin-top: -50px;
+  margin-bottom: -50px;
+  margin-top: -60px;
 }
 
 .confirm-password-box {
-  margin-bottom: 85px;
+  margin-bottom: 100px;
   margin-right: 40px;
   border-radius: 10px;
   flex: 1;
@@ -70,7 +70,7 @@
 }
 
 .sign-up-title {
-  font-size: 24px;
+  font-size: 18px;
   margin-bottom: 30px;
   color: #242565;
   text-align: center;
@@ -97,7 +97,7 @@
 
 .google-icon {
   margin-right: 10px;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .divider {
@@ -131,10 +131,10 @@ label {
   margin-bottom: 8px;
   color: #e91e63;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 16px;
 }
 span{
-  font-size: 20px;
+  font-size: 16px;
 }
 
 input {
@@ -142,7 +142,7 @@ input {
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 input:focus {
@@ -156,8 +156,8 @@ input:focus {
   align-items: center;
   justify-content: space-between;
   margin-top: 20px;
-  margin-right: 80px;
-  margin-left: 80px;
+  margin-right: 60px;
+  margin-left: 60px;
 }
 
 .sign-up-btn {
@@ -166,7 +166,7 @@ input:focus {
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
   
