@@ -1,0 +1,139 @@
+
+
+/* Footer Container */
+.footer {
+    
+    width: 98vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #0A075F;
+    color: #fff;
+  }
+  
+  /* Big Horizontal Section (50vh) */
+  .footer-main {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem;
+    gap: 2rem;
+  }
+  
+  /* Footer Columns */
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* First Column (30vw) */
+  .footer-col:first-child {
+    width: 30vw;
+  }
+  
+  /* Second and Third Columns (20vw) */
+  .footer-col:nth-child(2),
+  .footer-col:nth-child(3) {
+    width: 20vw;
+  }
+  
+  /* Fourth Column (30vw) */
+  .footer-col:last-child {
+    width: 30vw;
+  }
+  
+  /* Footer Logo */
+  .footer-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Footer Text */
+  .footer-text {
+    font-size: 0.9rem;
+    color: #bdc3c7;
+  }
+  
+  /* Footer Social Links */
+  .footer-socials {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .footer-socials a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  
+  .footer-socials a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Footer Titles */
+  .footer-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Footer Lists */
+  .footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-col ul li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #bdc3c7;
+  }
+  
+  /* Subscribe Section */
+  .footer-subscribe {
+    height: calc(4vw);
+    background-color: white;
+    display: flex;
+    gap: 0.5rem;
+    border-radius: 30px;
+  }
+  
+  .footer-subscribe input {
+    padding: 0.5rem;
+    font-size: calc(1vw + 0px);
+    border: none;
+    border-radius: 4px;
+    width: 70%;
+  }
+  
+  .footer-subscribe button {
+    width: 15vw;
+    min-width: 100px;
+    font-size: calc(1vw + 0px);
+    height: 85%;
+    margin-top: 1%;
+    margin-right: 1%;
+    background-color: #F5167E;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .footer-subscribe button:hover {
+   
+    background-color: #F5167E;
+  }
+  
+  /* Copyright Section (10vh) */
+  .footer-copyright {
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #34495e;
+    font-size: 0.9rem;
+    color: #bdc3c7;
+  }
