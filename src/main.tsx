@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+
+
 import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { router } from "./RoutingLayer/navigation/router";
@@ -25,11 +27,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 //   </React.StrictMode>
 // );
 
-// import Test from "./ServiceLayer/cloudinary/test"
-// import Upload from "./ServiceLayer/cloudinary/Upload";
+
 // ReactDOM.createRoot(document.getElementById("root")!).render(
 //      <React.StrictMode>
-//       <Upload />
-
+//       <ChatbotInterface />
+      
 //   </React.StrictMode>
 // );

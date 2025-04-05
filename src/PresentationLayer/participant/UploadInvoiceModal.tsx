@@ -9,6 +9,7 @@ import {
 } from "firebase/storage";
 import { db } from "../../ServiceLayer/firebase/firebaseConfig";
 import "./UploadInvoiceModal.css";
+import { uploadImage } from "../../ServiceLayer/cloudinary/imageUpload";
 
 interface UploadInvoiceModalProps {
   participation: { id: string };
@@ -29,38 +30,26 @@ const UploadInvoiceModal: React.FC<UploadInvoiceModalProps> = ({
   const handleUpload = async () => {
     if (!file) return;
     setUploading(true);
-
-    const fileRef = ref(storage, `invoices/${participation.id}/${file.name}`);
-    const task = uploadBytesResumable(fileRef, file);
-    setUploadTask(task); // Store the upload task to cancel later
-
-    task.on(
-      "state_changed",
-      (snapshot) => {
-        // Progress handling (optional)
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(`Upload is ${progress}% done`);
-      },
-      (error) => {
-        console.error("Upload failed:", error);
-        setUploading(false);
-      },
-      async () => {
-        // Upload completed
-        const downloadURL = await getDownloadURL(fileRef);
-
-        await updateDoc(doc(db, "participations", participation.id), {
-          paymentSubmitted: true,
-          status: "pending_payment",
-          paymentProofUrl: downloadURL,
-        });
-
-        console.log(`File uploaded: ${file.name}`);
-        setUploading(false);
-        onClose(); // Close modal after upload
-      }
-    );
+  
+    try {
+      // 🆕 Utilisation de Cloudinary pour l'upload au lieu de Firebase Storage
+      const downloadURL = await uploadImage(file);
+  
+      // 🆕 Mettre à jour Firestore avec l'URL de Cloudinary au lieu de Firebase Storage
+      await updateDoc(doc(db, "participations", participation.id), {
+        paymentSubmitted: true,
+        status: "pending_payment",
+        paymentProofUrl: downloadURL, // 🆕 URL récupérée depuis Cloudinary
+      });
+  
+      console.log(`File uploaded to Cloudinary: ${file.name}`);
+      alert (downloadURL);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    } finally {
+      setUploading(false);
+      onClose(); // Fermer la modal après l'upload
+    }
   };
 
   const handleCancel = () => {

@@ -84,9 +84,18 @@ const AddEvent3: React.FC = () => {
     });
   };
 
-  const handleFileUpload = async (file: File, setUrl: (url: string) => void) => {
+  const handleImageUpload = async (file: File, setUrl: (url: string) => void) => {
     try {
       const url = await CloudinaryService.uploadImage(file);
+      setUrl(url);
+    } catch (error) {
+      setError("IMAGE upload failed");
+    }
+  };
+
+  const handleFileUpload = async (file: File, setUrl: (url: string) => void) => {
+    try {
+      const url = await CloudinaryService.uploadFile(file);
       setUrl(url);
     } catch (error) {
       setError("File upload failed");
@@ -96,7 +105,7 @@ const AddEvent3: React.FC = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      handleFileUpload(e.target.files[0], setImageUrl);
+      handleImageUpload(e.target.files[0], setImageUrl);
     }
   };
 
@@ -257,9 +266,10 @@ const AddEvent3: React.FC = () => {
             <h2 className="form-section-h2">PLANNING:</h2>
             <input
               type="file"
+              alt="ici"
               onChange={handlePlanningChange}
-              className="file-input"
-              accept=".pdf,.doc,.docx"
+              //className="file-input"
+              accept=".pdf"
             />
           </div>
 
@@ -268,7 +278,7 @@ const AddEvent3: React.FC = () => {
             <input
               type="file"
               onChange={handleImageChange}
-              className="file-input"
+              //className="file-input"
               accept="image/*"
             />
           </div>
@@ -304,7 +314,6 @@ const AddEvent3: React.FC = () => {
               ))}
             </div>
           </div>
-
           <button
             onClick={() => setShowModal(true)}
             disabled={isSubmitting || !versionData.place || !versionData.date}
@@ -321,6 +330,7 @@ const AddEvent3: React.FC = () => {
           </button>
         </div>
       </div>
+      
 
       <ConfirmationModal
         show={showModal}

@@ -6,20 +6,19 @@ import {
 import { adminRoutes } from "./AdminNavBarRoutes";
 import { ParticipantRoutes } from "./ParticipantRoutes";
 import { eventCreationRoutes } from "./EventCreationRoutes";
-import App from "../../App"; // Composant parent (layout principal)
+
 import { authRoutes } from "./authRoute";
-import LandingPage from "../../PresentationLayer/common/LandingPage";
+
 import { startRoutes } from "./StartRoute";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route >
+    <Route>
       {startRoutes}
       {adminRoutes}
       {eventCreationRoutes}
       {authRoutes}
       {ParticipantRoutes}
-
     </Route>
   )
 );

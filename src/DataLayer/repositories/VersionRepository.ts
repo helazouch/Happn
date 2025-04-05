@@ -1,6 +1,7 @@
 import { db } from "../../ServiceLayer/firebase/firebaseConfig";
 import { collection, doc, setDoc, updateDoc, increment, getDoc, arrayUnion, Timestamp, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 import type { Version } from "../models/Version";
+import { Event } from "../models/Event";
 
 const versionsCol = collection(db, "versions");
 
@@ -68,21 +69,76 @@ export const VersionRepository = {
       console.error("Error getting last version:", error);
       throw new Error("Failed to fetch last version");
     }
+    
+  },
+
+
+  async getById(id: string): Promise<Version | null> {
+    const snap = await getDoc(doc(versionsCol, id));
+    return snap.exists() ? snap.data() as Version : null;
+  },
+
+
+  async getVersionWithEventDetails(versionId: string): Promise<{ version: Version, event: Event } | null> {
+    try {
+      // Récupérer la version
+      const versionRef = doc(db, "versions", versionId);
+      const versionSnap = await getDoc(versionRef);
+      
+      if (!versionSnap.exists()) return null;
+  
+      const versionData = versionSnap.data() as Version;
+      
+      // Récupérer l'événement associé
+      const eventRef = doc(db, "events", versionData.eventId);
+      const eventSnap = await getDoc(eventRef);
+      
+      if (!eventSnap.exists()) return null;
+  
+      const eventData = eventSnap.data() as Event;
+  
+      return {
+        version: versionData,
+        event: eventData
+      };
+    } catch (error) {
+      console.error("Error fetching version and event details:", error);
+      return null;
+    }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 };
+
+
+
+
+
+
+
+export async function getVersionWithEventDetails(versionId: string): Promise<{ version: Version, event: Event } | null> {
+  try {
+    // Récupérer la version
+    const versionRef = doc(db, "versions", versionId);
+    const versionSnap = await getDoc(versionRef);
+    
+    if (!versionSnap.exists()) return null;
+
+    const versionData = versionSnap.data() as Version;
+    
+    // Récupérer l'événement associé
+    const eventRef = doc(db, "events", versionData.eventId);
+    const eventSnap = await getDoc(eventRef);
+    
+    if (!eventSnap.exists()) return null;
+
+    const eventData = eventSnap.data() as Event;
+
+    return {
+      version: versionData,
+      event: eventData
+    };
+  } catch (error) {
+    console.error("Error fetching version and event details:", error);
+    return null;
+  }
+}

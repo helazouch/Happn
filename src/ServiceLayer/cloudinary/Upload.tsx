@@ -2,7 +2,8 @@ import axios from "axios";
 
 const cloudName = "djhamkno8"; // Remplace par ton Cloud Name
 const uploadPreset = "react_preset"; // Remplace par ton Upload Preset
-const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+const UPLOAD_URL_IMG = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+const UPLOAD_URL_FILE = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`;
 
 export const CloudinaryService = {  
   async uploadImage(file: File): Promise<string> {
@@ -15,7 +16,7 @@ export const CloudinaryService = {
     formData.append("upload_preset", uploadPreset);
 
     try {
-      const response = await axios.post(UPLOAD_URL, formData);
+      const response = await axios.post(UPLOAD_URL_IMG, formData);
       return response.data.secure_url; // Retourne l'URL de l'image
     } catch (error) {
       console.error("Erreur d'upload Cloudinary :", error);
@@ -38,6 +39,26 @@ export const CloudinaryService = {
       console.error("Erreur de téléchargement :", error);
       throw new Error("Impossible de télécharger le fichier.");
     }
-  }
+  },
+
+  async uploadFile(file: File): Promise<string> {
+    if (!cloudName || !uploadPreset) {
+      throw new Error("Cloudinary n'est pas bien configuré !");
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", uploadPreset);
+
+    try {
+      alert(UPLOAD_URL_FILE);
+      const response = await axios.post(UPLOAD_URL_FILE, formData);
+      return response.data.secure_url; // Retourne l'URL de FILE
+
+    } catch (error) {
+      console.error("Erreur d'upload Cloudinary :", error);
+      throw new Error("Échec de l'upload sur Cloudinary.");
+    }
+  },
 
 };

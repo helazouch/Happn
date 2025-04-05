@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../ServiceLayer/firebase/firebaseConfig.ts";
 import { useAuth } from "../../../Contexts/AuthContext.tsx";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./EventItem.css";
 
 type EventItemProps = {
@@ -47,6 +48,7 @@ const EventItem: React.FC<EventItemProps> = ({
   const [currentParticipants, setCurrentParticipants] =
     useState(nbparticipants);
   const { currentUser } = useAuth();
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleParticipate = async () => {
     if (!currentUser) {
@@ -137,9 +139,21 @@ const EventItem: React.FC<EventItemProps> = ({
     onModify?.(id_version);
   };
 
+  // Handle image click to navigate to event details page
+  const handleImageClick = () => {
+    if (id_version) {
+      navigate(`/event-details/${id_version}`); // Navigate to the event details page using the id_version
+    }
+  };
+
   return (
     <div className={`event-card ${variant}`}>
-      <img src={image} alt={title} className="event-image1" />
+      <img
+        src={image}
+        alt={title}
+        className="event-image1"
+        onClick={handleImageClick} // Add the onClick handler to the image
+      />
 
       <div className="event-content">
         <div className="event-header">
