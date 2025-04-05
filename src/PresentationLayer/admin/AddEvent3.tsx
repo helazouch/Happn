@@ -257,8 +257,9 @@ const AddEvent3: React.FC = () => {
             <h2 className="form-section-h2">PLANNING:</h2>
             <input
               type="file"
+              alt="ici"
               onChange={handlePlanningChange}
-              className="file-input"
+              //className="file-input"
               accept=".pdf,.doc,.docx"
             />
           </div>
@@ -268,7 +269,7 @@ const AddEvent3: React.FC = () => {
             <input
               type="file"
               onChange={handleImageChange}
-              className="file-input"
+              //className="file-input"
               accept="image/*"
             />
           </div>
@@ -304,7 +305,6 @@ const AddEvent3: React.FC = () => {
               ))}
             </div>
           </div>
-
           <button
             onClick={() => setShowModal(true)}
             disabled={isSubmitting || !versionData.place || !versionData.date}
@@ -321,6 +321,7 @@ const AddEvent3: React.FC = () => {
           </button>
         </div>
       </div>
+      
 
       <ConfirmationModal
         show={showModal}

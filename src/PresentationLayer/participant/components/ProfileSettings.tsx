@@ -1,22 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaUser, FaExclamationTriangle } from "react-icons/fa";
 import "./ProfileSettings.css";
+import { getAuth } from "firebase/auth";
+import { AuthService } from "../../../ServiceLayer/authentication/AuthService";
+import { useNavigationServiceStart } from "../../../RoutingLayer/navigation/NavigationServiceStart";
 
 const ProfileSettings = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [email, setEmail] = useState("");
+  const [connexion, setConnexion] = useState(""); // 1: email, 2: google
+  const [password, setPassword] = useState("");
+  const [oldPassword, setoldPassword] = useState("");
+  const navigation=useNavigationServiceStart();
   const handleDeleteClick = () => {
     setShowDeleteModal(true);
   };
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem("userEmail") || "";
+    const storedConnexion = sessionStorage.getItem("connexion") || "";
+    setEmail(storedEmail);
+    setConnexion(storedConnexion);
+  }, []);
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     // Add your account deletion logic here
-    console.log("Account deletion confirmed");
-    setShowDeleteModal(false);
+    try {
+      await AuthService.deleteCurrentUser();
+      // Rediriger vers la page de login ou d'accueil
+      alert("Account deletion confirmed");
+      console.log("Account deletion confirmed");
+      navigation.goToLandingPage();
+    } catch (error) {
+      alert("erreur lors de la suppression du compte");
+      setShowDeleteModal(false);
+    }
   };
 
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
+  };
+  const handleModify = async () => {
+    if (connexion === "1") {
+      // Email/password account, so we allow password change
+      console.log("New password:", password);
+      // Appelle ici Firebase Auth pour mettre à jour le mot de passe
+    } 
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+  
+      if (!user) {
+        alert("No user is currently logged in.");
+        return;
+      }
+  
+      await AuthService.updatePasswordForEmailUser(user, oldPassword, password);
+      alert("Password updated successfully.");
+      setPassword("");
+      setoldPassword("");
+    } catch (error) {
+      alert("Failed to update password: ");
+    }
   };
 
   return (
@@ -30,23 +74,30 @@ const ProfileSettings = () => {
           </div>
 
           <form className="profile-form">
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="username">Username</label>
               <input type="text" id="username" />
-            </div>
+            </div> */}
 
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input type="email" id="email" />
+              <input type="email" id="email" value={email} readOnly />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Current Password</label>
+              <input type="password" id="password" value={oldPassword}
+                onChange={(e) => setoldPassword(e.target.value)}/>
             </div>
 
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input type="password" id="password" />
+              <input type="password" id="password" value={password}
+                onChange={(e) => setPassword(e.target.value)} />
             </div>
 
             <div className="btn-container">
-              <button type="button" className="modify-btn">
+              <button type="button" className="modify-btn" onClick={handleModify}>
                 Modify
               </button>
             </div>

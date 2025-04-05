@@ -5,16 +5,19 @@ import { db } from "../../ServiceLayer/firebase/firebaseConfig.ts";
 import { Version } from "../../DataLayer/models/Version.ts";
 import "./VersionDetailsPage.css";
 import NavbarParticipant from "./components/NavbarParticipant.tsx";
+import { askGemini } from "../../ServiceLayer/externalServices/AIService.ts";
 
 const VersionDetailsPage: React.FC = () => {
   const { id_version } = useParams<{ id_version: string }>();
   const [version, setVersion] = useState<Version | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const [question, setQuestion] = useState<string>("");
+  const [aiResponse, setAiResponse] = useState<string>("Waiting for response...");
+  const [isLoadingResponse, setIsLoadingResponse] = useState<boolean>(false);
 
   useEffect(() => {
     if (!id_version) return;
-
     const fetchVersionDetails = async () => {
       try {
         const versionRef = doc(db, "versions", id_version);
@@ -35,6 +38,34 @@ const VersionDetailsPage: React.FC = () => {
 
     fetchVersionDetails();
   }, [id_version]);
+
+  const handleSendQuestion = async () => {
+    if (!question.trim()) {
+      alert("Question is required!");
+      return;
+    }
+
+    if (!id_version) {
+      alert("Event ID is missing!");
+      return;
+    }
+
+    try {
+      setIsLoadingResponse(true);
+      setAiResponse("Generating response...");
+      
+      // Vous pouvez utiliser l'ID de version dans le prompt si nécessaire
+      const response = await askGemini(question, id_version!);
+      
+      setAiResponse(response);
+      setQuestion(""); // Vide le textarea après envoi
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      setAiResponse("An error occurred while generating the response.");
+    } finally {
+      setIsLoadingResponse(false);
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
 
@@ -108,12 +139,27 @@ const VersionDetailsPage: React.FC = () => {
               <div className="chatbot-box-wrapper">
                 <div className="chatbot-box">
                   <h4>Need Help? Ask our Chatbot!</h4>
+                  <div className="chatbot-response">
+                    <h5>Response from AI:</h5>
+                    <p id="ai-response">
+                      {isLoadingResponse ? "Generating response..." : aiResponse}
+                    </p>
+                  </div>
                   <div className="chatbot-container">
                     <textarea
                       placeholder="Ask me anything..."
                       className="chatbot-input"
+                      value={question}
+                      onChange={(e) => setQuestion(e.target.value)}
+                      required
                     />
-                    <button className="chatbot-submit">Send</button>
+                    <button 
+                      className="chatbot-submit" 
+                      onClick={handleSendQuestion}
+                      disabled={isLoadingResponse}
+                    >
+                      {isLoadingResponse ? "Sending..." : "Send"}
+                    </button>
                   </div>
                 </div>
               </div>

@@ -8,6 +8,8 @@ import {
   getDocs,
   query,
   where,
+  getFirestore,
+  deleteDoc,
 } from "firebase/firestore";
 import type { Participation } from "../models/Participation";
 
@@ -88,4 +90,22 @@ export const ParticipationRepository = {
     })) as Participation[];
   },
 
+  async deleteParticipationsByParticipantId(participantId: string): Promise<void> {
+    try {
+      const db = getFirestore();
+      const participationsRef = collection(db, "participations");
+      const q = query(participationsRef, where("participantId", "==", participantId));
+      const querySnapshot = await getDocs(q);
+
+      const deletePromises = querySnapshot.docs.map((docSnap) =>
+        deleteDoc(doc(db, "participations", docSnap.id))
+      );
+
+      await Promise.all(deletePromises);
+      console.log(`Toutes les participations de ${participantId} ont été supprimées.`);
+    } catch (error) {
+      console.error("Erreur lors de la suppression des participations :", error);
+      throw error;
+    }
+  },
 };
