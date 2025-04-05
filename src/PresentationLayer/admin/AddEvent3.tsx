@@ -84,24 +84,31 @@ const AddEvent3: React.FC = () => {
     });
   };
 
-  const handleImageUpload = async (file: File, setUrl: (url: string) => void) => {
+  const handleImageUpload = async (
+    file: File,
+    setUrl: (url: string) => void
+  ) => {
     try {
       const url = await CloudinaryService.uploadImage(file);
       setUrl(url);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setError("IMAGE upload failed");
     }
   };
 
-  const handleFileUpload = async (file: File, setUrl: (url: string) => void) => {
+  const handleFileUpload = async (
+    file: File,
+    setUrl: (url: string) => void
+  ) => {
     try {
       const url = await CloudinaryService.uploadFile(file);
       setUrl(url);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setError("File upload failed");
     }
   };
-
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -182,7 +189,6 @@ const AddEvent3: React.FC = () => {
 
   return (
     <div className="page-container">
-
       {error && <div className="error-message">{error}</div>}
       <div className="main-content3">
         {/* First Column */}
@@ -330,7 +336,6 @@ const AddEvent3: React.FC = () => {
           </button>
         </div>
       </div>
-      
 
       <ConfirmationModal
         show={showModal}
@@ -344,7 +349,3 @@ const AddEvent3: React.FC = () => {
 };
 
 export default AddEvent3;
-function setImageUrl(url: string): void {
-  throw new Error("Function not implemented.");
-}
-

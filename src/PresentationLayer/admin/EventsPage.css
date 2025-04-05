@@ -78,6 +78,44 @@
     background-color: #3D37F1;
     color: white;
   }
+  /* Status Filter Container */
+.status-filter-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  padding: 0 10px;
+}
+
+/* Base Button Style */
+.status-filter-btn {
+  padding: 8px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 30px;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Hover State */
+.status-filter-btn:hover {
+  border-color: #3D37F1;
+  color: #3D37F1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Active State */
+.status-filter-btn.active {
+  background: linear-gradient(140deg, #ED4690, #5522CC);
+  border-color: transparent;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(93, 55, 241, 0.3);
+}
+
   
   /* Responsive adjustments */
   @media (max-width: 1200px) {
@@ -93,5 +131,14 @@
   
     .filters::after {
       display: none;
+    }
+    .status-filter-container {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .status-filter-btn {
+      padding: 6px 16px;
+      font-size: 13px;
     }
   }

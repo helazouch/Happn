@@ -8,7 +8,6 @@ import {
   addDoc,
   collection,
   getDoc,
-  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../../ServiceLayer/firebase/firebaseConfig.ts";
 import { useAuth } from "../../../Contexts/AuthContext.tsx";
@@ -120,17 +119,14 @@ const EventItem: React.FC<EventItemProps> = ({
   const handleDelete = async () => {
     if (!id_version) return;
 
-    if (window.confirm("Are you sure you want to delete this event?")) {
-      setIsLoading(true);
-      try {
-        await deleteDoc(doc(db, "versions", id_version));
-        onDelete?.(id_version);
-      } catch (err) {
-        setError("Failed to delete event");
-        console.error("Delete error:", err);
-      } finally {
-        setIsLoading(false);
-      }
+    setIsLoading(true);
+    try {
+      onDelete?.(id_version); // This calls handleDeleteEvent from parent
+    } catch (err) {
+      console.error("Delete error:", err);
+      setError("Failed to delete event.");
+    } finally {
+      setIsLoading(false);
     }
   };
 

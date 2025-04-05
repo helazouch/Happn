@@ -15,4 +15,5 @@ export interface Version {
   eventId: string;
   participants?: string[];
   categories?: string[];
+  canceled?: boolean;
 }

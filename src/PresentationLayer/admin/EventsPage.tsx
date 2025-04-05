@@ -2,18 +2,13 @@ import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import EventItem from "../common/components/EventItem";
 import Filters from "./components/Filters";
-import { db } from "../../ServiceLayer/firebase/firebaseConfig";
 import ModifyEventModal from "./components/ModifyEventModal";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  Timestamp,
-} from "firebase/firestore";
 import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
 import { Version } from "../../DataLayer/models/Version";
 import "./EventsPage.css";
+import { ServiceConnector } from "../../RoutingLayer/apiRoutes/eventRoute";
+
+type EventStatusFilter = "all" | "active" | "canceled";
 
 const EventsPage = () => {
   const navigation = useNavigationServiceEvent();
@@ -22,35 +17,44 @@ const EventsPage = () => {
     categories: [] as string[],
     priceRange: [10, 100] as [number, number],
   });
+  const [statusFilter, setStatusFilter] = useState<EventStatusFilter>("all");
 
   const [events, setEvents] = useState<Version[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAllEvents, setShowAllEvents] = useState(false);
 
-  // Add these state declarations for the modify modal
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Version | null>(null);
 
   const handleDeleteEvent = async (eventId: string) => {
-    if (window.confirm("Are you sure you want to delete this event?")) {
-      try {
-        await deleteDoc(doc(db, "versions", eventId));
-        setEvents((prevEvents) =>
-          prevEvents.filter((event) => event.id_version !== eventId)
-        );
-      } catch (err) {
-        console.error("Error deleting event:", err);
-        setError("Failed to delete event. Please try again.");
-      }
+    console.log("Delete triggered for ID:", eventId);
+
+    if (!eventId) {
+      console.error("No event ID provided.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this event?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await ServiceConnector.updateVersion(eventId, { canceled: true });
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.id_version === eventId ? { ...event, canceled: true } : event
+        )
+      );
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      setError("Failed to delete event. Please try again.");
     }
   };
 
   const handleModifyEvent = (event: Version) => {
-    setSelectedEvent({
-      ...event,
-      date: event.date instanceof Timestamp ? event.date.toDate() : event.date,
-    });
+    setSelectedEvent(event);
     setShowModifyModal(true);
   };
 
@@ -63,37 +67,16 @@ const EventsPage = () => {
     setShowModifyModal(false);
   };
 
-  // Fetch events from Firestore
+  // Fetch events using ServiceConnector
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
       setError("");
 
       try {
-        const querySnapshot = await getDocs(collection(db, "versions"));
-        const fetchedEvents: Version[] = [];
-
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          fetchedEvents.push({
-            id_version: doc.id,
-            versionName: data.versionName || "Unknown Version",
-            specificDescription: data.specificDescription || "No description",
-            date:
-              data.date instanceof Timestamp ? data.date.toDate() : new Date(),
-            place: data.place || "Unknown Place",
-            price: data.price || 0,
-            planning: data.planning || "Not Specified",
-            img: data.img || "/CyberHorizon.jpg",
-            nbparticipants: data.nbparticipants || 0,
-            capacity: data.capacity || 0,
-            plan_mediatique: data.plan_mediatique || "Not Specified",
-            eventId: data.eventId || "Unknown Event",
-            participants: data.participants || [],
-            categories: data.categories || [],
-          });
-        });
-
+        const fetchedEvents = await ServiceConnector.getFilteredVersions(
+          statusFilter
+        );
         setEvents(fetchedEvents);
       } catch (err) {
         console.error("Error fetching events:", err);
@@ -104,13 +87,17 @@ const EventsPage = () => {
     };
 
     fetchEvents();
-  }, []);
+  }, [statusFilter]);
 
   // Apply filters
   const filteredEvents = events.filter((event) => {
+    const eventDate =
+      event.date instanceof Date ? event.date : event.date.toDate();
+
+    // Status filter is already handled by the ServiceConnector call
     const matchesWeekday =
       filters.weekdays === "Any" ||
-      event.date.toLocaleString("en-US", { weekday: "long" }) ===
+      eventDate.toLocaleString("en-US", { weekday: "long" }) ===
         filters.weekdays;
     const matchesCategory =
       filters.categories.length === 0 ||
@@ -128,6 +115,11 @@ const EventsPage = () => {
     setShowAllEvents(true);
   };
 
+  const handleStatusFilterChange = (filter: EventStatusFilter) => {
+    setStatusFilter(filter);
+    setShowAllEvents(false);
+  };
+
   return (
     <div className="events-page-events">
       <Navbar />
@@ -141,6 +133,34 @@ const EventsPage = () => {
             </button>
           </div>
 
+          {/* Status Filter Controls */}
+          <div className="status-filter-container">
+            <button
+              className={`status-filter-btn ${
+                statusFilter === "all" ? "active" : ""
+              }`}
+              onClick={() => handleStatusFilterChange("all")}
+            >
+              All Events
+            </button>
+            <button
+              className={`status-filter-btn ${
+                statusFilter === "active" ? "active" : ""
+              }`}
+              onClick={() => handleStatusFilterChange("active")}
+            >
+              Active Events
+            </button>
+            <button
+              className={`status-filter-btn ${
+                statusFilter === "canceled" ? "active" : ""
+              }`}
+              onClick={() => handleStatusFilterChange("canceled")}
+            >
+              Canceled Events
+            </button>
+          </div>
+
           {loading && <p>Loading events...</p>}
           {error && <p className="error-message">{error}</p>}
 
@@ -151,9 +171,9 @@ const EventsPage = () => {
                   : filteredEvents.slice(0, 3)
                 ).map((event) => {
                   const eventDate =
-                    event.date instanceof Timestamp
-                      ? event.date.toDate()
-                      : event.date;
+                    event.date instanceof Date
+                      ? event.date
+                      : event.date.toDate();
                   const eventProps = {
                     id_version: event.id_version,
                     eventId: event.eventId,
@@ -170,6 +190,7 @@ const EventsPage = () => {
                     price: event.price,
                     capacity: event.capacity,
                     nbparticipants: event.nbparticipants,
+                    canceled: event.canceled,
                     onDelete: () => handleDeleteEvent(event.id_version!),
                     onModify: () => handleModifyEvent(event),
                   };
@@ -182,7 +203,7 @@ const EventsPage = () => {
                     />
                   );
                 })
-              : !loading && <p>No events found.</p>}
+              : !loading && <p>No events found matching your filters.</p>}
           </div>
 
           {!showAllEvents && filteredEvents.length > 3 && (

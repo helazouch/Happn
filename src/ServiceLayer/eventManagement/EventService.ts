@@ -74,6 +74,25 @@ export class EventService {
       throw new Error("Failed to create and attach version to event");
     }
   }
+  
+  static async getAllVersions(): Promise<Version[]> {
+    try {
+      return await FirebaseService.getAllVersions();
+    } catch (error) {
+      console.error("[ServiceConnector] Error fetching all versions:", error);
+      throw new Error("Failed to fetch versions");
+    }
+  }
+
+  
+  static async getVersionsByStatus( canceled: boolean): Promise<Version[]> {
+    try {
+      return await FirebaseService.getVersionsByStatus( canceled);
+    } catch (error) {
+      console.error("[ServiceConnector] Error fetching versions by status:", error);
+      throw new Error(`Failed to fetch ${canceled ? 'canceled' : 'active'} versions`);
+    }
+  }
 
   static async updateVersion(
     versionId: string,
@@ -94,4 +113,5 @@ export class EventService {
       throw new Error("Failed to update version");
     }
   }
+  
 }

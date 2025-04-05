@@ -79,4 +79,48 @@ export class ServiceConnector {
       throw new Error("Failed to update version");
     }
   }
+
+
+  static async getAllVersions(): Promise<Version[]> {
+    try {
+      return await EventService.getAllVersions();
+    } catch (error) {
+      console.error("[ServiceConnector] Error fetching all versions:", error);
+      throw new Error("Failed to fetch versions");
+    }
+  }
+
+
+  static async getVersionsByStatus( canceled: boolean): Promise<Version[]> {
+    try {
+      return await EventService.getVersionsByStatus( canceled);
+    } catch (error) {
+      console.error("[ServiceConnector] Error fetching versions by status:", error);
+      throw new Error(`Failed to fetch ${canceled ? 'canceled' : 'active'} versions`);
+    }
+  }
+
+  /**
+   * Alternative method that combines both filters in one call
+   * @param eventId The ID of the parent event
+   * @param filterType 'all' | 'active' | 'canceled'
+   * @returns Promise<Version[]> Array of filtered versions
+   */
+  static async getFilteredVersions(filterType: 'all' | 'active' | 'canceled'): Promise<Version[]> {
+    try {
+      switch (filterType) {
+        case 'all':
+          return await this.getAllVersions();
+        case 'active':
+          return await this.getVersionsByStatus( false);
+        case 'canceled':
+          return await this.getVersionsByStatus( true);
+        default:
+          return await this.getAllVersions();
+      }
+    } catch (error) {
+      console.error("[ServiceConnector] Error fetching filtered versions:", error);
+      throw new Error(`Failed to fetch ${filterType} versions`);
+    }
+  }
 }
