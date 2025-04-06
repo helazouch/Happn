@@ -74,11 +74,16 @@ export const EventRepository = {
 
   // Get event by name
   async getByName(eventName: string): Promise<string | null> {
-    const eventsSnapshot = await getDocs(eventsCol); // Get all events
+    const eventsSnapshot = await getDocs(eventsCol);
+    const normalizedSearchName = eventName.trim().toLowerCase();
+    
     for (const docSnap of eventsSnapshot.docs) {
         const event = docSnap.data() as Event;
-        if (event.name === eventName) {
-            return event.id_event || null; // Return event ID if found
+        const normalizedEventName = event.name.trim().toLowerCase();
+        
+        if (normalizedEventName === normalizedSearchName) {
+            // Return document ID if id_event doesn't exist
+            return event.id_event || docSnap.id; 
         }
     }
     return null; // Return null if event not found

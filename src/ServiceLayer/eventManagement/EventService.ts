@@ -46,10 +46,20 @@ export class EventService {
   static async getEventId(eventName: string): Promise<string> {
     try {
       const eventId = await EventRepository.getByName(eventName);
-      return eventId ?? "";
+      console.log("Repository returned for", eventName, ":", eventId);
+      
+      if (!eventId) {
+        throw new Error(`Event "${eventName}" not found in database`);
+      }
+      
+      return eventId;
     } catch (error) {
-      console.error("[EventService] Error fetching event by name:", error);
-      throw error;
+      console.error("Detailed error in getEventId:", error);
+      if (error instanceof Error) {
+        throw new Error(`Could not retrieve event ID: ${error.message}`);
+      } else {
+        throw new Error("Could not retrieve event ID due to an unknown error");
+      }
     }
   }
 
@@ -74,6 +84,25 @@ export class EventService {
       throw new Error("Failed to create and attach version to event");
     }
   }
+  
+  static async getAllVersions(): Promise<Version[]> {
+    try {
+      return await FirebaseService.getAllVersions();
+    } catch (error) {
+      console.error("[ServiceConnector] Error fetching all versions:", error);
+      throw new Error("Failed to fetch versions");
+    }
+  }
+
+  
+  static async getVersionsByStatus( canceled: boolean): Promise<Version[]> {
+    try {
+      return await FirebaseService.getVersionsByStatus( canceled);
+    } catch (error) {
+      console.error("[ServiceConnector] Error fetching versions by status:", error);
+      throw new Error(`Failed to fetch ${canceled ? 'canceled' : 'active'} versions`);
+    }
+  }
 
   static async updateVersion(
     versionId: string,
@@ -94,4 +123,5 @@ export class EventService {
       throw new Error("Failed to update version");
     }
   }
+  
 }

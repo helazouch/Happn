@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import EventNameInput from "./components/EventNameInput";
-import {ServiceConnector} from "../../RoutingLayer/apiRoutes/eventRoute"
+import { ServiceConnector } from "../../RoutingLayer/apiRoutes/eventRoute";
 import DuplicateEventModal from "./DuplicateEventModal";
-import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";  
+import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
 import "./AddEvent1.css";
 
 const AddEvent1: React.FC = () => {
   const navigation = useNavigationServiceEvent();
-  const [eventName, setEventName] = useState(""); 
+  const [eventName, setEventName] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [duplicateModalState, setDuplicateModalState] = useState({
     show: false,
-    eventName: ""
+    eventName: "",
   });
   const handleNameSubmit = async (eventName: string): Promise<boolean> => {
     if (!eventName.trim()) {
@@ -29,7 +29,7 @@ const AddEvent1: React.FC = () => {
       if (exists) {
         setDuplicateModalState({
           show: true,
-          eventName: eventName
+          eventName: eventName,
         });
         return false;
       }
@@ -44,11 +44,37 @@ const AddEvent1: React.FC = () => {
     }
   };
 
-  const handleCreateNewVersion = async() => {
-    
-    const eventId = await ServiceConnector.getEventId(duplicateModalState.eventName);
-    navigation.confirmDuplicateAndGoToAddEvent3(duplicateModalState.eventName,eventId);
-    
+  const handleCreateNewVersion = async () => {
+    setIsLoading(true);
+    try {
+      console.log("Fetching ID for event:", duplicateModalState.eventName);
+      const eventId = await ServiceConnector.getEventId(
+        duplicateModalState.eventName
+      );
+      console.log("Received event ID:", eventId);
+
+      if (!eventId) {
+        throw new Error("Received empty event ID");
+      }
+
+      console.log("Navigating to AddEvent3 with:", {
+        eventName: duplicateModalState.eventName,
+        eventId,
+      });
+      navigation.confirmDuplicateAndGoToAddEvent3(
+        duplicateModalState.eventName,
+        eventId
+      );
+    } catch (error) {
+      console.error("Full error details:", error);
+      setError(`Failed to create new version: ${(error as Error).message}`);
+    } finally {
+      setIsLoading(false);
+      setDuplicateModalState({
+        show: false,
+        eventName: "",
+      });
+    }
   };
 
   const handleCancelNewVersion = () => {
@@ -57,7 +83,7 @@ const AddEvent1: React.FC = () => {
     );
     setDuplicateModalState({
       show: false,
-      eventName: ""
+      eventName: "",
     });
   };
 
@@ -67,8 +93,8 @@ const AddEvent1: React.FC = () => {
       <div className="main-content11">
         <p id="textAddEvent1">New event, new stories to tell..</p>
         <EventNameInput
-        eventName={eventName}      // <-- Passe eventName en prop
-        setEventName={setEventName} // <-- Passe setEventName en prop
+          eventName={eventName} // <-- Passe eventName en prop
+          setEventName={setEventName} // <-- Passe setEventName en prop
           onSubmit={handleNameSubmit}
           error={error}
           onError={setError}

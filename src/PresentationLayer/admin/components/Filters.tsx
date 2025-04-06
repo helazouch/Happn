@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import "./Filters.css";
@@ -17,7 +17,12 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [showPrice, setShowPrice] = useState(false);
   const [weekdays, setWeekdays] = useState("Any");
   const [categories, setCategories] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([10, 100]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
+
+  // Trigger initial filter change with default values
+  useEffect(() => {
+    onFilterChange({ weekdays, categories, priceRange });
+  }, []); // Empty dependency array means this runs once on mount
 
   const handleCategoryChange = (category: string) => {
     const updatedCategories = categories.includes(category)
@@ -109,6 +114,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
               range
               min={0}
               max={500}
+              defaultValue={[0, 500]}
               value={priceRange}
               onChange={handlePriceChange}
               trackStyle={[{ backgroundColor: "#007bff" }]}

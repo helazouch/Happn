@@ -13,7 +13,8 @@ export const VersionRepository = {
       ...version,
       id_version: docRef.id,
       participants: [],
-      nbparticipants: 0
+      nbparticipants: 0,
+      canceled: false,
     });
     return docRef.id;
   },
