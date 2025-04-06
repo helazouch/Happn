@@ -44,8 +44,7 @@ const DuplicateEventModalTest: React.FC = () => {
         show={showModal && eventExists}
         onYes={handleYes}
         onNo={handleNo}
-        isLoading={isLoading}
-      />
+        isLoading={isLoading} eventName={""}      />
 
       <div style={{ marginTop: '20px' }}>
         <p>Variable booléenne eventExists: {eventExists.toString()}</p>

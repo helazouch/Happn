@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import EventItem from "../common/components/EventItem";
 import Filters from "./components/Filters";
 import ModifyEventModal from "./components/ModifyEventModal";
+import DeleteConfirmationModal from "./components/DeleteConfirmationModal";
 import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
 import { Version } from "../../DataLayer/models/Version";
 import "./EventsPage.css";
@@ -29,6 +30,9 @@ const EventsPage = () => {
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Version | null>(null);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [eventIdToDelete, setEventIdToDelete] = useState<string | null>(null);
+
   // Check for urgent events whenever events change
   useEffect(() => {
     if (events.length > 0) {
@@ -54,33 +58,79 @@ const EventsPage = () => {
     }
   }, [events]);
 
-  const handleDeleteEvent = async (eventId: string) => {
-    console.log("Delete triggered for ID:", eventId);
+  // const handleDeleteEvent = async (eventId: string) => {
+  //   console.log("Delete triggered for ID:", eventId);
 
-    if (!eventId) {
-      console.error("No event ID provided.");
-      return;
+  //   if (!eventId) {
+  //     console.error("No event ID provided.");
+  //     return;
+  //   }
+
+  //   const confirmDelete = window.confirm(
+  //     "Are you sure you want to cancel this event?"
+  //   );
+  //   if (!confirmDelete) return;
+
+  //   try {
+  //     await ServiceConnector.updateVersion(eventId, { canceled: true });
+  //     setEvents((prevEvents) =>
+  //       prevEvents.map((event) =>
+  //         event.id_version === eventId ? { ...event, canceled: true } : event
+  //       )
+  //     );
+  //     // Also remove from urgent events if it was there
+  //     setUrgentEvents((prev) => prev.filter((e) => e.id_version !== eventId));
+  //   } catch (err) {
+  //     console.error("Error canceling event:", err);
+  //     setError("Failed to cancel event. Please try again.");
+  //   }
+  // };
+
+  const openDeleteModal = (eventId: string) => {
+    setEventIdToDelete(eventId);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setEventIdToDelete(null);
+    setShowDeleteModal(false);
+  };
+
+  const confirmDelete = async () => {
+    if (!eventIdToDelete) return;
+    try {
+      await handleDeleteEvent(eventIdToDelete);
+      console.log("Event deleted");
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    } finally {
+      closeDeleteModal();
     }
-
-    const confirmDelete = window.confirm(
-      "Are you sure you want to cancel this event?"
-    );
-    if (!confirmDelete) return;
-
+  };
+  
+  
+  const handleDeleteEvent = async (eventId: string) => {
     try {
       await ServiceConnector.updateVersion(eventId, { canceled: true });
+  
+      // Mise à jour de l'état pour marquer l'événement comme annulé
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event.id_version === eventId ? { ...event, canceled: true } : event
         )
       );
-      // Also remove from urgent events if it was there
+  
+      // Exclure l'événement annulé des événements urgents
       setUrgentEvents((prev) => prev.filter((e) => e.id_version !== eventId));
+  
     } catch (err) {
       console.error("Error canceling event:", err);
       setError("Failed to cancel event. Please try again.");
     }
   };
+  
+  
+
 
   const handleModifyEvent = (event: Version) => {
     setSelectedEvent(event);
@@ -119,11 +169,36 @@ const EventsPage = () => {
   }, [statusFilter]);
 
   // Apply filters
+  // const filteredEvents = events.filter((event) => {
+  //   const eventDate =
+  //     event.date instanceof Date ? event.date : event.date.toDate();
+
+  //   // Status filter is already handled by the ServiceConnector call
+  //   const matchesWeekday =
+  //     filters.weekdays === "Any" ||
+  //     eventDate.toLocaleString("en-US", { weekday: "long" }) ===
+  //       filters.weekdays;
+  //   const matchesCategory =
+  //     filters.categories.length === 0 ||
+  //     filters.categories.some((category) =>
+  //       event.categories?.includes(category)
+  //     );
+  //   const matchesPrice =
+  //     event.price >= filters.priceRange[0] &&
+  //     event.price <= filters.priceRange[1];
+
+  //   return matchesWeekday && matchesCategory && matchesPrice;
+  // });
+
   const filteredEvents = events.filter((event) => {
     const eventDate =
       event.date instanceof Date ? event.date : event.date.toDate();
-
-    // Status filter is already handled by the ServiceConnector call
+  
+    // Filtrer les événements annulés ici si nécessaire
+    if (event.canceled) {
+      return false;
+    }
+  
     const matchesWeekday =
       filters.weekdays === "Any" ||
       eventDate.toLocaleString("en-US", { weekday: "long" }) ===
@@ -134,11 +209,11 @@ const EventsPage = () => {
         event.categories?.includes(category)
       );
     const matchesPrice =
-      event.price >= filters.priceRange[0] &&
-      event.price <= filters.priceRange[1];
-
+      event.price >= filters.priceRange[0] && event.price <= filters.priceRange[1];
+  
     return matchesWeekday && matchesCategory && matchesPrice;
   });
+  
 
   const handleLoadMore = () => {
     setShowAllEvents(true);
@@ -234,7 +309,7 @@ const EventsPage = () => {
                     capacity: event.capacity,
                     nbparticipants: event.nbparticipants,
                     canceled: event.canceled,
-                    onDelete: () => handleDeleteEvent(event.id_version!),
+                    onDelete: () => openDeleteModal(event.id_version!),
                     onModify: () => handleModifyEvent(event),
                   };
 
@@ -268,6 +343,13 @@ const EventsPage = () => {
           eventData={selectedEvent}
         />
       )}
+      {showDeleteModal && (
+    <DeleteConfirmationModal
+      show={showDeleteModal}
+      onConfirm={confirmDelete}
+      onCancel={closeDeleteModal}
+    />
+  )}
 
       {/* Urgent Events Modal */}
       {showUrgentModal && (
@@ -328,6 +410,7 @@ const EventsPage = () => {
           </div>
         </div>
       )}
+        
     </div>
   );
 };
