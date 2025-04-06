@@ -180,17 +180,24 @@ export class FirebaseService {
     try {
       const versionsRef = collection(db, "versions");
       const q = query(versionsRef, where("canceled", "==", canceled));
-      const snapshot = await getDocs(q);
       
-      return snapshot.docs.map(doc => ({
-        id_version: doc.id,
-        ...this.parseVersionData(doc.data())
-      }));
+      const snapshot = await getDocs(q);
+      const now = new Date();
+      
+      return snapshot.docs
+        .map(doc => ({
+          id_version: doc.id,
+          ...this.parseVersionData(doc.data())
+        }))
+        .filter(version => 
+          canceled || 
+          (version.date instanceof Date ? version.date : version.date.toDate()) >= now
+        );
     } catch (error) {
       console.error("[EventService] Error fetching versions by status:", error);
       throw new Error(`Failed to fetch ${canceled ? 'canceled' : 'active'} versions`);
     }
-  }
+}
 
   private static parseVersionData(data: FirestoreVersionDocument): Omit<Version, 'id_version'> {
     const normalizeDate = (dateValue: Timestamp | Date | string | undefined): Date => {
