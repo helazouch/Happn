@@ -166,6 +166,8 @@ const AddEvent3: React.FC = () => {
     "Conferences & Seminars",
     "Cultural & Entertainment Events",
     "Sports & Wellness Events",
+    "Charity Galas",
+    "Community Festivals",
   ];
 
   // Get current date as Date object for display
