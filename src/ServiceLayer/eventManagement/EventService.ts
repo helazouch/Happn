@@ -46,10 +46,20 @@ export class EventService {
   static async getEventId(eventName: string): Promise<string> {
     try {
       const eventId = await EventRepository.getByName(eventName);
-      return eventId ?? "";
+      console.log("Repository returned for", eventName, ":", eventId);
+      
+      if (!eventId) {
+        throw new Error(`Event "${eventName}" not found in database`);
+      }
+      
+      return eventId;
     } catch (error) {
-      console.error("[EventService] Error fetching event by name:", error);
-      throw error;
+      console.error("Detailed error in getEventId:", error);
+      if (error instanceof Error) {
+        throw new Error(`Could not retrieve event ID: ${error.message}`);
+      } else {
+        throw new Error("Could not retrieve event ID due to an unknown error");
+      }
     }
   }
 

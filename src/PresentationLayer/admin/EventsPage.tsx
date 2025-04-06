@@ -23,9 +23,36 @@ const EventsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAllEvents, setShowAllEvents] = useState(false);
+  const [urgentEvents, setUrgentEvents] = useState<Version[]>([]);
+  const [showUrgentModal, setShowUrgentModal] = useState(false);
 
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Version | null>(null);
+
+  // Check for urgent events whenever events change
+  useEffect(() => {
+    if (events.length > 0) {
+      const now = new Date();
+      const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      const urgent = events.filter((event) => {
+        const eventDate =
+          event.date instanceof Date ? event.date : event.date.toDate();
+        const isUpcoming = eventDate > now && eventDate <= oneWeekFromNow;
+        const isLowAttendance = event.nbparticipants < event.capacity / 2;
+        const isActive = !event.canceled;
+
+        return isUpcoming && isLowAttendance && isActive;
+      });
+
+      setUrgentEvents(urgent);
+
+      // Show modal automatically if there are urgent events
+      if (urgent.length > 0) {
+        setShowUrgentModal(true);
+      }
+    }
+  }, [events]);
 
   const handleDeleteEvent = async (eventId: string) => {
     console.log("Delete triggered for ID:", eventId);
@@ -36,7 +63,7 @@ const EventsPage = () => {
     }
 
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this event?"
+      "Are you sure you want to cancel this event?"
     );
     if (!confirmDelete) return;
 
@@ -47,9 +74,11 @@ const EventsPage = () => {
           event.id_version === eventId ? { ...event, canceled: true } : event
         )
       );
+      // Also remove from urgent events if it was there
+      setUrgentEvents((prev) => prev.filter((e) => e.id_version !== eventId));
     } catch (err) {
-      console.error("Error deleting event:", err);
-      setError("Failed to delete event. Please try again.");
+      console.error("Error canceling event:", err);
+      setError("Failed to cancel event. Please try again.");
     }
   };
 
@@ -164,6 +193,20 @@ const EventsPage = () => {
           {loading && <p>Loading events...</p>}
           {error && <p className="error-message">{error}</p>}
 
+          {/* Urgent Events Notification */}
+          {urgentEvents.length > 0 && (
+            <div className="urgent-notification">
+              <h3>Attention Needed!</h3>
+              <p>
+                You have {urgentEvents.length} event(s) happening soon with low
+                attendance. Consider canceling them to free up resources.
+              </p>
+              <button onClick={() => setShowUrgentModal(true)}>
+                View Urgent Events
+              </button>
+            </div>
+          )}
+
           <div className="events-container">
             {filteredEvents.length > 0
               ? (showAllEvents
@@ -200,6 +243,9 @@ const EventsPage = () => {
                       key={event.id_version}
                       {...eventProps}
                       variant="default"
+                      isUrgent={urgentEvents.some(
+                        (e) => e.id_version === event.id_version
+                      )}
                     />
                   );
                 })
@@ -221,6 +267,66 @@ const EventsPage = () => {
           onSuccess={handleEventUpdated}
           eventData={selectedEvent}
         />
+      )}
+
+      {/* Urgent Events Modal */}
+      {showUrgentModal && (
+        <div className="modal-overlay">
+          <div className="urgent-events-modal">
+            <div className="modal-header">
+              <h2>Urgent Events Requiring Attention</h2>
+              <button onClick={() => setShowUrgentModal(false)}>×</button>
+            </div>
+            <div className="modal-content">
+              <p>
+                The following events are happening soon with low attendance
+                (less than 50% capacity):
+              </p>
+              <ul className="urgent-events-list">
+                {urgentEvents.map((event) => {
+                  const eventDate =
+                    event.date instanceof Date
+                      ? event.date
+                      : event.date.toDate();
+                  return (
+                    <li key={event.id_version} className="urgent-event-item">
+                      <div className="urgent-event-info">
+                        <h3>{event.versionName}</h3>
+                        <p>
+                          Date: {eventDate.toLocaleDateString()} | Participants:{" "}
+                          {event.nbparticipants}/{event.capacity} | Price: $
+                          {event.price}
+                        </p>
+                      </div>
+                      <div className="urgent-event-actions">
+                        <button
+                          onClick={() => handleModifyEvent(event)}
+                          className="modify-btn"
+                        >
+                          Modify
+                        </button>
+                        <button
+                          onClick={() => handleDeleteEvent(event.id_version!)}
+                          className="cancel-btn"
+                        >
+                          Cancel Event
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div className="modal-footer">
+              <button
+                onClick={() => setShowUrgentModal(false)}
+                className="close-btn"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

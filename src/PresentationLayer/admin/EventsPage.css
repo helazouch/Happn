@@ -115,6 +115,175 @@
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(93, 55, 241, 0.3);
 }
+/* Urgent Events Notification */
+.urgent-notification {
+  background-color: #fff3cd;
+  border-left: 5px solid #ffc107;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.urgent-notification h3 {
+  color: #856404;
+  margin: 0;
+}
+
+.urgent-notification p {
+  margin: 0;
+  color: #856404;
+}
+
+.urgent-notification button {
+  align-self: flex-start;
+  background-color: #ffc107;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #856404;
+  font-weight: bold;
+}
+
+.urgent-notification button:hover {
+  background-color: #ffca2b;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.urgent-events-modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #d9534f;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.urgent-events-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+}
+
+.urgent-event-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.urgent-event-item:last-child {
+  border-bottom: none;
+}
+
+.urgent-event-info h3 {
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.urgent-event-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.urgent-event-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modify-btn, .cancel-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.modify-btn {
+  background-color: #5bc0de;
+  color: white;
+}
+
+.modify-btn:hover {
+  background-color: #46b8da;
+}
+
+.cancel-btn {
+  background-color: #d9534f;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #c9302c;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  text-align: right;
+}
+
+.close-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #5a6268;
+}
+
+/* Add this to your EventItem styling if you want urgent events to stand out */
+.event-item.urgent {
+  border-left: 4px solid #d9534f;
+}
 
   
   /* Responsive adjustments */

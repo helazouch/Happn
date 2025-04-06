@@ -190,6 +190,10 @@ const AddEvent3: React.FC = () => {
   return (
     <div className="page-container">
       {error && <div className="error-message">{error}</div>}
+      {/* Add this header section */}
+      <div className="event-header">
+        <h1>Creating Version for: {eventName}</h1>
+      </div>
       <div className="main-content3">
         {/* First Column */}
         <div className="column">

@@ -25,6 +25,8 @@ type EventItemProps = {
   capacity?: number;
   nbparticipants?: number;
   variant?: "default" | "participate";
+  isUrgent?: boolean; // Add this line
+
   onDelete?: (eventId: string) => void;
   onModify?: (eventId: string) => void;
 };
