@@ -12,16 +12,48 @@ body {
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
-  background-color: rgb(139, 154, 63);
-  padding-top: 6%;
-
+  background-color: white;
+  padding: 2% 0;
 }
 
+/* Event Header */
+.event-header {
+  text-align: center;
+  margin: 0 auto;
+  padding: 1.5rem 0;
+  width: 100%;
+  max-width: 1400px;
+  box-sizing: border-box;
+}
 
+.event-header h1 {
+  font-size: 2rem;
+  color: #242565;
+  margin: 0;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  position: relative;
+}
+
+.event-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background-color: #ff69b4;
+  border-radius: 3px;
+}
+
+/* Main Content */
 .main-content3 {
   display: flex;
+  flex-wrap: wrap;
   gap: 30px;
-  padding: 30px;
+  padding: 0 30px 30px;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
@@ -32,12 +64,13 @@ body {
 .column {
   flex: 1;
   min-width: 300px;
+  max-width: calc(33.333% - 20px);
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* Form sections */
+/* Form Sections */
 .form-section {
   background-color: white;
   padding: 25px;
@@ -46,6 +79,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .form-section-h2 {
@@ -57,7 +91,7 @@ body {
   border-bottom: 1px solid #eee;
 }
 
-/* Input fields */
+/* Input Fields */
 input[type="text"],
 input[type="date"],
 input[type="file"],
@@ -78,7 +112,7 @@ textarea:focus {
   outline: none;
 }
 
-/* Range inputs */
+/* Range Inputs */
 .range-container {
   display: flex;
   align-items: center;
@@ -86,33 +120,31 @@ textarea:focus {
 }
 
 .range-input {
-    flex: 1;
-    height: 8px;
-    -webkit-appearance: none;
-    background: #ddd;
-    border-radius: 4px;
-    outline: none;
-  }
-  .range-input::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #ff69b4;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+  flex: 1;
+  height: 8px;
+  -webkit-appearance: none;
+  background: #ddd;
+  border-radius: 4px;
+  outline: none;
+}
 
+.range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #ff69b4;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
 
+.range-value {
+  min-width: 40px;
+  text-align: center;
+  font-weight: bold;
+}
 
-  
-  .range-value {
-    min-width: 40px;
-    text-align: center;
-    font-weight: bold;
-  }
-
-/* File inputs */
+/* File Inputs */
 .file-input {
   padding: 8px 0;
 }
@@ -153,71 +185,92 @@ textarea:focus {
   cursor: pointer;
 }
 
-/* Finish text */
-.finish-text {
-  color: #242565;
-  font-size: 30px;
-  margin-top: auto;
-  align-self: flex-end;
-  cursor: pointer;
-  padding: 10px 0;
-}
-
-.finish-text:hover {
-  color: #ff69b4;
-}
-
-
+/* Finish Button */
 .finish-button3 {
-  font-size: 24px; /* taille du texte similaire à l'image */
-  color: #242565; /* un bleu foncé comme sur l’image */
+  font-size: 24px;
+  color: #242565;
   border: none;
   background-color: transparent;
   cursor: pointer;
   padding: 10px 20px;
   transition: all 0.2s ease;
-  font-weight: 300; /* texte fin */
+  font-weight: 300;
   margin-left: 75%;
+  margin-top: auto;
 }
 
-/* .finish-button3:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.finish-button3:hover {
+  color: #ff69b4;
 }
 
-.finish-button3:hover:not(:disabled) {
-  opacity: 0.7;
-  transform: scale(1.05);
-} */
+/* Error Message */
+.error-message {
+  color: #ff0000;
+  padding: 10px;
+  margin: 10px auto;
+  max-width: 1400px;
+  width: 100%;
+  text-align: center;
+  background-color: #ffeeee;
+  border-radius: 4px;
+}
 
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .column {
+    max-width: calc(50% - 15px);
+  }
+}
 
-
-
-
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .main-content3 {
-    padding: 20px;
+    padding: 0 20px 20px;
     gap: 20px;
   }
 }
 
-@media (max-width: 900px) {
-  .main-content3 {
-    flex-direction: column;
+@media (max-width: 768px) {
+  .column {
+    max-width: 100%;
+    min-width: 100%;
   }
   
-  .column {
+  .event-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .finish-button3 {
+    margin-left: 0;
     width: 100%;
+    text-align: center;
   }
 }
 
 @media (max-width: 480px) {
   .main-content3 {
-    padding: 15px;
+    padding: 0 15px 15px;
+    gap: 15px;
   }
   
   .form-section {
     padding: 20px;
+  }
+  
+  .event-header h1 {
+    font-size: 1.3rem;
+    padding: 0.5rem;
+  }
+  
+  .event-header h1::after {
+    width: 60px;
+    height: 2px;
+  }
+  
+  input[type="text"],
+  input[type="date"],
+  input[type="file"],
+  textarea {
+    padding: 10px;
+    font-size: 14px;
   }
 }

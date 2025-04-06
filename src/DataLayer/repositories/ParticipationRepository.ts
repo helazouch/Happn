@@ -14,6 +14,7 @@ import {
 import type { Participation } from "../models/Participation";
 
 const participationCol = collection(db, "participations");
+const participationsCol = collection(db, "participations");
 
 export const ParticipationRepository = {
   //  Créer une participation
@@ -108,4 +109,30 @@ export const ParticipationRepository = {
       throw error;
     }
   },
+
+
+  // Get participations by version ID
+  async getByVersionId(versionId: string): Promise<Participation[]> {
+    const q = query(
+      participationCol, 
+      where("versionId", "==", versionId),
+      where("status", "in", ["confirmed", "pending_payment"])
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Participation));
+  },
+
+  // Get confirmed participation count for version
+  async getConfirmedCount(versionId: string): Promise<number> {
+    const q = query(
+      participationCol,
+      where("versionId", "==", versionId),
+      where("status", "==", "confirmed")
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.size;
+  }
 };

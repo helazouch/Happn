@@ -13,6 +13,7 @@ import {
 import type { Event } from "../models/Event";
 
 const eventsCol = collection(db, "events");
+const versionsCol = collection(db, "versions");
 
 export const EventRepository = {
   // Create new event
@@ -73,13 +74,84 @@ export const EventRepository = {
 
   // Get event by name
   async getByName(eventName: string): Promise<string | null> {
-    const eventsSnapshot = await getDocs(eventsCol); // Get all events
+    const eventsSnapshot = await getDocs(eventsCol);
+    const normalizedSearchName = eventName.trim().toLowerCase();
+    
     for (const docSnap of eventsSnapshot.docs) {
         const event = docSnap.data() as Event;
-        if (event.name === eventName) {
-            return event.id_event || null; // Return event ID if found
+        const normalizedEventName = event.name.trim().toLowerCase();
+        
+        if (normalizedEventName === normalizedSearchName) {
+            // Return document ID if id_event doesn't exist
+            return event.id_event || docSnap.id; 
         }
     }
     return null; // Return null if event not found
+},
+
+
+async getEventsWithParticipantCount(): Promise<
+Array<{
+  eventId: string;
+  name: string;
+  participantCount: number;
+}>
+> {
+const eventsSnapshot = await getDocs(eventsCol);
+const result = [];
+
+for (const eventDoc of eventsSnapshot.docs) {
+  const eventData = eventDoc.data() as Event;
+  const versionsQuery = query(
+    versionsCol, 
+    where("eventId", "==", eventDoc.id)
+  );
+  const versionsSnapshot = await getDocs(versionsQuery);
+  
+  const participantCount = versionsSnapshot.docs.reduce(
+    (sum, versionDoc) => sum + (versionDoc.data().nbparticipants || 0), 0);
+  
+  result.push({
+    eventId: eventDoc.id,
+    name: eventData.name,
+    participantCount
+  });
 }
+
+return result;
+},
+
+
+async getEventsWithVersionCount(): Promise<
+Array<{
+  eventId: string;
+  name: string;
+  versionCount: number;
+}>
+> {
+const eventsSnapshot = await getDocs(eventsCol);
+const result = [];
+
+for (const eventDoc of eventsSnapshot.docs) {
+  const eventData = eventDoc.data() as Event;
+  const versionsQuery = query(
+    versionsCol, 
+    where("eventId", "==", eventDoc.id)
+  );
+  const versionsSnapshot = await getDocs(versionsQuery);
+  
+  result.push({
+    eventId: eventDoc.id,
+    name: eventData.name,
+    versionCount: versionsSnapshot.size
+  });
+}
+
+return result;
+}
+  
+
 };
+
+
+

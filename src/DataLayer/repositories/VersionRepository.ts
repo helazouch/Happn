@@ -13,7 +13,8 @@ export const VersionRepository = {
       ...version,
       id_version: docRef.id,
       participants: [],
-      nbparticipants: 0
+      nbparticipants: 0,
+      canceled: false,
     });
     return docRef.id;
   },
@@ -105,6 +106,23 @@ export const VersionRepository = {
       console.error("Error fetching version and event details:", error);
       return null;
     }
+  },
+
+
+  async getByEventId(eventId: string): Promise<Version[]> {
+    const q = query(versionsCol, where("eventId", "==", eventId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({
+      id_version: doc.id,
+      ...doc.data()
+    } as Version));
+  },
+
+  // Get participant count for a specific version
+  async getParticipantCount(versionId: string): Promise<number> {
+    const versionDoc = await getDoc(doc(versionsCol, versionId));
+    if (!versionDoc.exists()) return 0;
+    return versionDoc.data().nbparticipants || 0;
   }
 
 };
