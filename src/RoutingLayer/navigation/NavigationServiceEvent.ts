@@ -8,7 +8,12 @@ export const useNavigationServiceEvent = () => {
       sessionStorage.removeItem("newEventName");
       sessionStorage.removeItem("newEventOrganizer");
       sessionStorage.removeItem("newEventDescription");
+      sessionStorage.removeItem("versionId");
       navigate("/events/new");
+    },
+    goToMediaPlan:(versionId: string)=> {
+      sessionStorage.setItem("versionId", versionId);
+      navigate("/events/mediaplan");
     },
 
     goToAddEventDetails: (eventName: string) => {
@@ -25,7 +30,7 @@ export const useNavigationServiceEvent = () => {
       console.log("Navigating to /events/new/finalize");
       sessionStorage.setItem("currentEventId",eventId);
       sessionStorage.setItem("newEventName", eventName);
-      sessionStorage.setItem("newEventOrganizer", "");
+      sessionStorage.setItem("newE7ventOrganizer", "");
       sessionStorage.setItem("newEventDescription", "");
       navigate("/events/new/finalize"); 
     },

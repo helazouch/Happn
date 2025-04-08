@@ -17,12 +17,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 
-// import Chatbot from "./ServiceLayer/externalServices/Chatbot";
-// import MediaPlan from "./ServiceLayer/externalServices/MediaPlan";
+
+// import PlanMedia from "./PresentationLayer/admin/PlanMedia";
 // ReactDOM.createRoot(document.getElementById("root")!).render(
 //      <React.StrictMode>
-//       <Chatbot />
-//       <MediaPlan />
+//       <PlanMedia></PlanMedia>
 
 //   </React.StrictMode>
 // );

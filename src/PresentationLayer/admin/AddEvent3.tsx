@@ -8,6 +8,7 @@ import "./AddEvent3.css";
 import "./ConfirmationModal.css";
 import { ServiceConnector } from "../../RoutingLayer/apiRoutes/eventRoute";
 import { CloudinaryService } from "../../ServiceLayer/cloudinary/Upload";
+import { useNavigationServiceEvent } from "../../RoutingLayer/navigation/NavigationServiceEvent";
 
 interface ConfirmationData {
   place: string;
@@ -18,7 +19,7 @@ interface ConfirmationData {
 }
 
 const AddEvent3: React.FC = () => {
-  const navigation = useNavigationServiceAdminNavBar();
+  const navigation = useNavigationServiceEvent();
   const eventId = sessionStorage.getItem("currentEventId") || "";
   const eventName = sessionStorage.getItem("newEventName") || "";
 
@@ -157,7 +158,7 @@ const AddEvent3: React.FC = () => {
         versionToCreate
       );
       alert(` Version created successfully!\nVersion ID: ${versionId}`);
-      navigation.goToEvents();
+      navigation.goToMediaPlan(versionId);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to create version";

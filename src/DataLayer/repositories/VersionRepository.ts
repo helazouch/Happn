@@ -123,7 +123,21 @@ export const VersionRepository = {
     const versionDoc = await getDoc(doc(versionsCol, versionId));
     if (!versionDoc.exists()) return 0;
     return versionDoc.data().nbparticipants || 0;
-  }
+  },
+    // Update media plan of a version
+    async updateMediaPlan(versionId: string, mediaPlanContent: string): Promise<void> {
+      try {
+        const versionRef = doc(versionsCol, versionId);
+        await updateDoc(versionRef, {
+          plan_mediatique: mediaPlanContent
+        });
+        console.log("Media plan updated successfully.");
+      } catch (error) {
+        console.error("Error updating media plan:", error);
+        throw new Error("Failed to update media plan");
+      }
+    },
+  
 
 };
 
