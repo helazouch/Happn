@@ -15,7 +15,7 @@ const SignUp = () => {
     setError("");
 
     if (password !== confirmPassword) {
-      alert("Les mots de passe ne correspondent pas.");
+      // alert("Les mots de passe ne correspondent pas.");
       setError("Les mots de passe ne correspondent pas.");
       return;
     }
@@ -25,9 +25,9 @@ const SignUp = () => {
         email,
         password
       );
-      alert("Compte créé avec succès ! et le user id est");
-      alert(user.uid);
-      alert(user.email);
+      // alert("Compte créé avec succès ! et le user id est");
+      // alert(user.uid);
+      // alert(user.email);
       if (isSpecialUser) {
         navigation.goToAdminDashboard(user.uid, user.email || "", "1");
       } else {
@@ -45,9 +45,9 @@ const SignUp = () => {
   const handleGoogleSignUp = async () => {
     try {
       const { user, isSpecialUser } = await ServiceConnector.signWithGoogle();
-      alert("Connexion avec Google réussie !");
-      alert(user.uid);
-      alert(user.email);
+      // alert("Connexion avec Google réussie !");
+      // alert(user.uid);
+      // alert(user.email);
       if (isSpecialUser) {
         navigation.goToAdminDashboard(user.uid, user.email || "", "2");
       } else {

@@ -17,7 +17,7 @@ const Login = () => {
     try {
       const { user, isSpecialUser }= await ServiceConnector.signInWithEmail(email,password);
 
-      alert("Connexion réussie !");
+      // alert("Connexion réussie !");
       if (isSpecialUser){
         navigation.goToAdminDashboard(user.uid,user.email||"","1");
       }
@@ -27,7 +27,7 @@ const Login = () => {
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
-        alert("erreur de connexion");
+        // alert("erreur de connexion");
         navigation.goToAuthError();
       } else {
         setError("Une erreur inconnue s'est produite !");
@@ -38,7 +38,7 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
        const { user, isSpecialUser } = await ServiceConnector.signWithGoogle();
-      alert("Connexion avec Google réussie !");
+      // alert("Connexion avec Google réussie !");
       if (isSpecialUser){
         navigation.goToAdminDashboard(user.uid,user.email||"","2");
       }

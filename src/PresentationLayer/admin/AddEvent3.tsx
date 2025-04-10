@@ -138,8 +138,8 @@ const AddEvent3: React.FC = () => {
 
     try {
       // 1. Upload files first
-      alert(imageUrl);
-      alert(planningUrl);
+      // alert(imageUrl);
+      // alert(planningUrl);
 
       // 2. Prepare version data for Firestore
       const versionToCreate = {

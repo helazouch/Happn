@@ -116,6 +116,7 @@
   
   .login-link:hover {
     color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
   }
   
   .signup-button {
@@ -128,6 +129,7 @@
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s ease;
+    
   }
   
   .signup-button:hover {
@@ -135,6 +137,7 @@
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(237, 70, 144, 0.3);
+    cursor: pointer;
   }
   
   /* Responsive adjustments */
