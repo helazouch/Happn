@@ -6,13 +6,29 @@ import AxesSelector from './components/AxesSelector';
 import Chart from './components/Chart';
 
 const App = () => {
-    const [selectedAxis1, setSelectedAxis1] = useState("Axe 1");
-    const [selectedAxis2, setSelectedAxis2] = useState("Axe 2");
+    const [selectedAxis1, setSelectedAxis1] = useState("events");
+    const [selectedAxis2, setSelectedAxis2] = useState("nbr participant");
   
     const handleAxesChange = (axis1: string, axis2: string) => {
       setSelectedAxis1(axis1);
       setSelectedAxis2(axis2);
     };
+    console.log("Contenu de sessionStorage :");
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key) {
+        console.log(`${key}: ${sessionStorage.getItem(key)}`);
+      }
+    }
+    const isAuthenticated = sessionStorage.getItem("connexion");
+    if (!isAuthenticated || isAuthenticated.trim() === "") {
+      return (
+        <div style={{ textAlign: "center", marginTop: "100px", fontSize: "24px", color: "red" }}>
+          Accès non autorisé
+        </div>
+      );
+    }
+  
   
     return (
       <React.StrictMode>

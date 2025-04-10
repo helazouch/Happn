@@ -70,6 +70,14 @@ const VersionDetailsPage: React.FC = () => {
   if (loading) return <div>Loading...</div>;
 
   if (error) return <div className="error-message">{error}</div>;
+  const isAuthenticated = sessionStorage.getItem("connexion");
+    if (!isAuthenticated || isAuthenticated.trim() === "") {
+      return (
+        <div style={{ textAlign: "center", marginTop: "100px", fontSize: "24px", color: "red" }}>
+          Accès non autorisé
+        </div>
+      );
+    }
 
   return (
     <div className="version-details-page">

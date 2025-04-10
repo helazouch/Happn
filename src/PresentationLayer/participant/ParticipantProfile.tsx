@@ -7,6 +7,14 @@ import ProfileSettings from "./components/ProfileSettings";
 // import Chart from './components/Chart';
 
 const ParticipantProfile = () => {
+  const isAuthenticated = sessionStorage.getItem("connexion");
+    if (!isAuthenticated || isAuthenticated.trim() === "") {
+      return (
+        <div style={{ textAlign: "center", marginTop: "100px", fontSize: "24px", color: "red" }}>
+          Accès non autorisé
+        </div>
+      );
+    }
   return (
     <>
       <NavbarParticipant />

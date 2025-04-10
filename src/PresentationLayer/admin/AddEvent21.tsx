@@ -50,6 +50,14 @@ const AddEvent21: React.FC = () => {
   const handleCancel = () => {
     navigation.cancelAndReturnToAddEvent1();
   };
+  const isAuthenticated = sessionStorage.getItem("connexion");
+    if (!isAuthenticated || isAuthenticated.trim() === "") {
+      return (
+        <div style={{ textAlign: "center", marginTop: "100px", fontSize: "24px", color: "red" }}>
+          Accès non autorisé
+        </div>
+      );
+    }
 
   return (
     <div className="main-content">

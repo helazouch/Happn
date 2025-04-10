@@ -77,6 +77,8 @@ const ProfileSettings = () => {
     setModifyStatus(null);
     setModifyMessage("");
   };
+  
+  
 
   return (
     <div className="settings-wrapper">

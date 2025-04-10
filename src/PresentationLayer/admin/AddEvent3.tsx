@@ -188,6 +188,14 @@ const AddEvent3: React.FC = () => {
     price: versionData.price,
     selectedCategories: versionData.categories || [],
   };
+  const isAuthenticated = sessionStorage.getItem("connexion");
+    if (!isAuthenticated || isAuthenticated.trim() === "") {
+      return (
+        <div style={{ textAlign: "center", marginTop: "100px", fontSize: "24px", color: "red" }}>
+          Accès non autorisé
+        </div>
+      );
+    }
 
   return (
     <div className="page-container">

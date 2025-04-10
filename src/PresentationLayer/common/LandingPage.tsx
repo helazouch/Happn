@@ -33,6 +33,13 @@ const LandingPage = () => {
 
     fetchData();
   }, []);
+  console.log("Contenu de sessionStorage :");
+  for (let i = 0; i < sessionStorage.length; i++) {
+    const key = sessionStorage.key(i);
+    if (key) {
+      console.log(`${key}: ${sessionStorage.getItem(key)}`);
+    }
+  }
 
   return (
     <div>

@@ -83,12 +83,14 @@ export const ParticipationRepository = {
   getAll1: async (): Promise<Participation[]> => {
     // Créer une requête pour récupérer les participations avec status "pending_payment"
     const q = query(participationCol, where("status", "==", "pending_payment"));
-    
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
+    const participations = snapshot.docs.map(doc => ({
       id: doc.id, // Ajoute l'id du document
       ...doc.data() // Récupère les autres données du document
     })) as Participation[];
+    console.log("hhhh");
+    // console.log("Participations trouvées :", participations); // Affiche les résultats dans la console
+    return participations;
   },
 
   async deleteParticipationsByParticipantId(participantId: string): Promise<void> {
