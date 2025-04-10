@@ -39,8 +39,7 @@
   
   .filters-checkboxes {
     padding: 10px 0;
-    margin-left: -45px;
-    margin-right: 70px;
+    margin-left: -35px;
   }
   
   .filters-checkboxes label {
@@ -50,6 +49,8 @@
     margin-bottom: 8px;
     cursor: pointer;
     color: black;
+    margin-right: 50px;
+    margin-left: 40px;
   }
   
   

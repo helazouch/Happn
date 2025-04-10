@@ -88,6 +88,9 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
               "Conferences & Seminars",
               "Cultural & Entertainment Events",
               "Sports & Wellness Events",
+              "Sports &Wellness Events",
+              "Charity Galas",
+              "Community Festivals",
             ].map((category) => (
               <label key={category}>
                 <input

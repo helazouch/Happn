@@ -43,7 +43,7 @@ const LandingPage = () => {
 
   return (
     <div>
-      <div className="landing-page">
+      <div className="landing-page" >
         <HeaderComponent />
         {loading ? (
           <p className="loading-text">Loading versions...</p>
@@ -51,9 +51,16 @@ const LandingPage = () => {
           <EventSlider versions={versions} autoSlideInterval={6000} />
         )}
       </div>
-
-      <div>
-        <EventSectionWithSearch versions={versions} />
+        <div id="events">
+            <EventSectionWithSearch versions={versions} />
+            <div className="about-us-section" id="aboutus">
+          <h2>About Us</h2>
+          <p>
+          We are a passionate and driven team committed to organizing meaningful and innovative events that inspire, connect, and empower people. Our goal is to create a dynamic space where creativity, collaboration, and knowledge sharing thrive.
+          With a strong focus on community and growth, we strive to bring together individuals from diverse backgrounds to learn from one another, build valuable relationships, and explore new opportunities.
+          Every event we organize is designed to leave a lasting impact — not just through engaging content and experiences, but by fostering a sense of belonging and inspiration that continues long after the event is over.
+          </p>
+        </div>
         <Footer />
       </div>
     </div>

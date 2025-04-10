@@ -4,6 +4,19 @@ import SignupButton from "./SignupButton";
 
 const HeaderComponent = () => {
   const navigation = useNavigationServiceAuth();
+  const scrollToEvents = () => {
+      const eventsSection = document.getElementById('events');
+      if (eventsSection) {
+        eventsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+    const scrollToAboutUs = () => {
+      const aboutSection = document.getElementById('aboutus');
+      if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+
   return (
     <header className="page-header">
       <div className="header-container">
@@ -20,15 +33,15 @@ const HeaderComponent = () => {
             <a href="/" className="nav-link">
               Home
             </a>
-            <a href="#events" className="nav-link">
+            <a onClick={scrollToEvents} className="nav-link" style={{ cursor: "pointer" }}>
               Events
             </a>
-            <a href="#about" className="nav-link">
+            <a onClick={scrollToAboutUs} className="nav-link" style={{ cursor: "pointer" }}>
               About Us
             </a>
-            <a href="#contact" className="nav-link">
+            {/* <a href="#contact" className="nav-link">
               Contact
-            </a>
+            </a> */}
           </div>
 
           {/* Auth buttons */}

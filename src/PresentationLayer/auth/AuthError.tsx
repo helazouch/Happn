@@ -1,40 +1,24 @@
+import { useNavigationServiceAuth } from "../../RoutingLayer/navigation/NavigationServiceAuth";
+import './AuthError.css';
 
 const AuthError = () => {
+  const navigationService = useNavigationServiceAuth();
+
+  const handleReturnToLogin = () => {
+    navigationService.goToSignIn(); // Assurez-vous que cette méthode existe dans ton service de navigation
+  };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Erreur d'authentification</h2>
-      <p style={styles.message}>
+    <div className="auth-error-container">
+      <h2 className="auth-error-title">Erreur d'authentification</h2>
+      <p className="auth-error-message">
         Une erreur s'est produite lors de l'authentification. Veuillez réessayer.
       </p>
-      <button style={styles.button}>
+      <button className="auth-error-button" onClick={handleReturnToLogin}>
         Retour à la connexion
       </button>
     </div>
   );
-};
-
-// Styles en ligne pour une mise en page simple
-const styles = {
-  container: {
-    textAlign: "center" as "center",
-    padding: "20px",
-    fontFamily: "Arial, sans-serif",
-  },
-  title: {
-    color: "#d32f2f",
-  },
-  message: {
-    marginBottom: "20px",
-  },
-  button: {
-    padding: "10px 20px",
-    backgroundColor: "#1976d2",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
 };
 
 export default AuthError;

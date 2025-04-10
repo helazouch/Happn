@@ -96,6 +96,27 @@
   flex-direction: column;
   margin-bottom: 30px;
 }
+html {
+  scroll-behavior: smooth;
+}
 
 
+.about-us-section {
+  background-color: #f5f5f5;
+  padding: 60px 20px;
+  text-align: center;
+  color: #333;
+}
 
+.about-us-section h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #ED4690;
+}
+
+.about-us-section p {
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 1.1em;
+  line-height: 1.6;
+}

@@ -33,6 +33,7 @@
   margin: 1rem 0;
   text-align: left;
   padding: 0 1rem;
+  margin-left: 20px;
 }
 
 .detail-row {
@@ -40,6 +41,7 @@
   justify-content: space-between;
   margin-bottom: 0.8rem;
   padding-bottom: 0.8rem;
+  margin-top: 20px;
   border-bottom: 1px solid #f0f0f0;
   color: #555;
   font-size: 0.95rem;
