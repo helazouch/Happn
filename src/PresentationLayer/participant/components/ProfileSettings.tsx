@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaUser, FaExclamationTriangle } from "react-icons/fa";
+import { FaUser, FaExclamationTriangle, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import "./ProfileSettings.css";
 import { getAuth } from "firebase/auth";
 import { AuthService } from "../../../ServiceLayer/authentication/AuthService";
@@ -7,14 +7,19 @@ import { useNavigationServiceStart } from "../../../RoutingLayer/navigation/Navi
 
 const ProfileSettings = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showModifyModal, setShowModifyModal] = useState(false);
+  const [modifyStatus, setModifyStatus] = useState<"success" | "error" | null>(null);
+  const [modifyMessage, setModifyMessage] = useState("");
   const [email, setEmail] = useState("");
   const [connexion, setConnexion] = useState(""); // 1: email, 2: google
   const [password, setPassword] = useState("");
   const [oldPassword, setoldPassword] = useState("");
-  const navigation=useNavigationServiceStart();
+  const navigation = useNavigationServiceStart();
+
   const handleDeleteClick = () => {
     setShowDeleteModal(true);
   };
+
   useEffect(() => {
     const storedEmail = sessionStorage.getItem("userEmail") || "";
     const storedConnexion = sessionStorage.getItem("connexion") || "";
@@ -23,15 +28,15 @@ const ProfileSettings = () => {
   }, []);
 
   const handleConfirmDelete = async () => {
-    // Add your account deletion logic here
     try {
       await AuthService.deleteCurrentUser();
-      // Rediriger vers la page de login ou d'accueil
-      alert("Account deletion confirmed");
-      console.log("Account deletion confirmed");
-      navigation.goToLandingPage();
+      setShowDeleteModal(false);
+      setModifyStatus("success");
+      setModifyMessage("Account deleted successfully");
+      setTimeout(() => navigation.goToLandingPage(), 1500);
     } catch (error) {
-      alert("erreur lors de la suppression du compte");
+      setModifyStatus("error");
+      setModifyMessage("Error deleting account");
       setShowDeleteModal(false);
     }
   };
@@ -39,28 +44,38 @@ const ProfileSettings = () => {
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
   };
+
   const handleModify = async () => {
     if (connexion === "1") {
-      // Email/password account, so we allow password change
-      console.log("New password:", password);
-      // Appelle ici Firebase Auth pour mettre à jour le mot de passe
-    } 
-    try {
-      const auth = getAuth();
-      const user = auth.currentUser;
-  
-      if (!user) {
-        alert("No user is currently logged in.");
-        return;
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (!user) {
+          setModifyStatus("error");
+          setModifyMessage("No user is currently logged in.");
+          setShowModifyModal(true);
+          return;
+        }
+
+        await AuthService.updatePasswordForEmailUser(user, oldPassword, password);
+        setModifyStatus("success");
+        setModifyMessage("Password updated successfully!");
+        setPassword("");
+        setoldPassword("");
+      } catch (error) {
+        setModifyStatus("error");
+        setModifyMessage("Failed to update password. Please check your current password.");
+      } finally {
+        setShowModifyModal(true);
       }
-  
-      await AuthService.updatePasswordForEmailUser(user, oldPassword, password);
-      alert("Password updated successfully.");
-      setPassword("");
-      setoldPassword("");
-    } catch (error) {
-      alert("Failed to update password: ");
     }
+  };
+
+  const closeModifyModal = () => {
+    setShowModifyModal(false);
+    setModifyStatus(null);
+    setModifyMessage("");
   };
 
   return (
@@ -74,11 +89,6 @@ const ProfileSettings = () => {
           </div>
 
           <form className="profile-form">
-            {/* <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <input type="text" id="username" />
-            </div> */}
-
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input type="email" id="email" value={email} readOnly />
@@ -86,14 +96,22 @@ const ProfileSettings = () => {
 
             <div className="form-group">
               <label htmlFor="password">Current Password</label>
-              <input type="password" id="password" value={oldPassword}
-                onChange={(e) => setoldPassword(e.target.value)}/>
+              <input 
+                type="password" 
+                id="current-password" 
+                value={oldPassword}
+                onChange={(e) => setoldPassword(e.target.value)}
+              />
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" value={password}
-                onChange={(e) => setPassword(e.target.value)} />
+              <label htmlFor="password">New Password</label>
+              <input 
+                type="password" 
+                id="new-password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} 
+              />
             </div>
 
             <div className="btn-container">
@@ -150,6 +168,25 @@ const ProfileSettings = () => {
                 Yes
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modify Password Status Modal */}
+      {showModifyModal && (
+        <div className="modal-overlay">
+          <div className={`status-modal ${modifyStatus}`}>
+            <div className="status-icon">
+              {modifyStatus === "success" ? (
+                <FaCheckCircle className="success-icon" />
+              ) : (
+                <FaTimesCircle className="error-icon" />
+              )}
+            </div>
+            <h3>{modifyMessage}</h3>
+            <button className="modal-ok-btn" onClick={closeModifyModal}>
+              OK
+            </button>
           </div>
         </div>
       )}

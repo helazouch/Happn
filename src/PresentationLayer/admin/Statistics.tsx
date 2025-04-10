@@ -17,13 +17,13 @@ const App = () => {
     return (
       <React.StrictMode>
         <Navbar />
-        <div style={{ display: "flex", height: "100vh" }}>
+        <div style={{ display: "flex", height: "70vh" , backgroundColor: "#ffffff"}}>
           <Notifications />
           <div style={{ flex: 1, backgroundColor: "#ffffff" }}>
             <div className='axesselectorcontainer'>
               <AxesSelector onAxesChange={handleAxesChange} />
             </div>
-            <div className='chartcontainer'>
+            <div className='chartcontainer' >
               <Chart axis1={selectedAxis1} axis2={selectedAxis2} />
             </div>
           </div>

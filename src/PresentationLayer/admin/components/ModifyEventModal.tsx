@@ -9,6 +9,7 @@ interface ModifyEventModalProps {
   onClose: () => void;
   onSuccess: (updatedEvent: Version) => void;
   eventData: Version;
+  
 }
 
 const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
@@ -131,7 +132,7 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-content1">
         <div className="modal-header">
           <h2>Modify Event</h2>
           <button onClick={onClose} className="close-button">
@@ -143,9 +144,9 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
 
         <div className="modal-body">
           {/* First Column */}
-          <div className="column">
-            <div className="form-section">
-              <h2 className="form-section-h2">VERSION NAME:</h2>
+          <div className="column1">
+            <div className="form-section1">
+              <h2 className="form-section1-h2">VERSION NAME:</h2>
               <input
                 type="text"
                 value={versionData.versionName}
@@ -154,8 +155,8 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
               />
             </div>
 
-            <div className="form-section">
-              <h2 className="form-section-h2">PLACE:</h2>
+            <div className="form-section1">
+              <h2 className="form-section1-h2">PLACE:</h2>
               <input
                 type="text"
                 value={versionData.place}
@@ -164,8 +165,8 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
               />
             </div>
 
-            <div className="form-section">
-              <h2 className="form-section-h2">DATE:</h2>
+            <div className="form-section1">
+              <h2 className="form-section1-h2">DATE:</h2>
               <input
                 type="date"
                 value={
@@ -178,8 +179,8 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
               />
             </div>
 
-            <div className="form-section">
-              <h2 className="form-section-h2">CAPACITY:</h2>
+            <div className="form-section1">
+              <h2 className="form-section1-h2">CAPACITY:</h2>
               <div className="range-container">
                 <input
                   type="range"
@@ -193,8 +194,8 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
               </div>
             </div>
 
-            <div className="form-section">
-              <h2 className="form-section-h2">PRICE:</h2>
+            <div className="form-section1">
+              <h2 className="form-section1-h2">PRICE:</h2>
               <div className="range-container">
                 <input
                   type="range"
@@ -210,9 +211,9 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
           </div>
 
           {/* Second Column */}
-          <div className="column">
-            <div className="form-section">
-              <h2 className="form-section-h2">PLANNING:</h2>
+          <div className="column1">
+            <div className="form-section1">
+              <h2 className="form-section1-h2">PLANNING:</h2>
               <input
                 type="file"
                 onChange={handlePlanningChange}
@@ -226,8 +227,8 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
               )}
             </div>
 
-            <div className="form-section">
-              <h2 className="form-section-h2">PICTURE:</h2>
+            <div className="form-section1">
+              <h2 className="form-section1-h2">PICTURE:</h2>
               <input
                 type="file"
                 onChange={handleImageChange}
@@ -241,8 +242,8 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
               )}
             </div>
 
-            <div className="form-section">
-              <h2 className="form-section-h2">DESCRIPTION:</h2>
+            <div className="form-section1">
+              <h2 className="form-section1-h2">DESCRIPTION:</h2>
               <textarea
                 value={versionData.specificDescription}
                 onChange={handleInputChange("specificDescription")}
@@ -253,9 +254,9 @@ const ModifyEventModal: React.FC<ModifyEventModalProps> = ({
           </div>
 
           {/* Third Column */}
-          <div className="column">
-            <div className="form-section">
-              <h2 className="form-section-h2">CATEGORIES:</h2>
+          <div className="column1">
+            <div className="form-section1">
+              <h2 className="form-section1-h2">CATEGORIES:</h2>
               <div className="categories-list">
                 {categories.map((category) => (
                   <label key={category} className="category-item">

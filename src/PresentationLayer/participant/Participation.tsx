@@ -104,9 +104,9 @@ const Participation = () => {
 
   if (loading) {
     return (
-      <div className="main-container">
+      <div className="main-container1">
         <Navbar />
-        <div className="content-container">
+        <div className="content-container1">
           <div className="loading-state">
             <p>Loading...</p>
           </div>
@@ -116,9 +116,9 @@ const Participation = () => {
   }
 
   return (
-    <div className="main-container">
+    <div className="main-container1">
       <Navbar />
-      <div className="content-container">
+      <div className="content-container1">
         {participations.length === 0 ? (
           <div className="empty-state">No participations found.</div>
         ) : (
@@ -129,7 +129,7 @@ const Participation = () => {
                   {formatDate(participation.version?.date)}
                 </div>
 
-                <div className="info-column">
+                <div className="info-column1">
                   <h3 className="version-name">
                     {participation.version?.versionName}
                   </h3>

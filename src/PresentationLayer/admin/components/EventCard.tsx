@@ -53,7 +53,7 @@ import "./EventCard.css";
 
 interface EventCardProps {
   image: string;
-  eventName: string;
+  eventName: React.ReactNode;
   // clientName: string;
   //status: string;
   onAccept: () => void;
@@ -72,11 +72,11 @@ const EventCard: React.FC<EventCardProps> = ({
 
   return (
     <div className="event-card-container">
-      <div className="event-card">
+      <div className="event-card12">
         <img
           src={image}
           alt="Event"
-          className="event-image"
+          className="event-image12"
           onClick={() => setIsOpen(true)}
         />
         <div className="event-details">

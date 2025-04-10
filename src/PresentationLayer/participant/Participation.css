@@ -1,14 +1,14 @@
 /* Participation.css */
 
 /* Main Layout */
-.main-container {
+.main-container1 {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background-color: #f8f9fa;
   }
   
-  .content-container {
+  .content-container1 {
     flex: 1;
     padding: 2rem;
     margin-left: 100px;
@@ -71,7 +71,7 @@
   }
   
   /* Info Column */
-  .info-column {
+  .info-column1 {
     width: 35%;
     padding: 0 1.5rem;
   }

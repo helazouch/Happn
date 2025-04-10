@@ -1,8 +1,9 @@
 .filters {
     width: 250px;
     padding: 20px;
-    background-color: #F5F5F5;
+    background-color: #f8f9fa;
     border-right: 1px solid #ddd;
+    
   }
   
   .filter-section {
@@ -38,13 +39,19 @@
   
   .filters-checkboxes {
     padding: 10px 0;
+    margin-left: -45px;
+    margin-right: 70px;
   }
   
   .filters-checkboxes label {
-    display: block;
+    display: inline-flex;
+    align-items: center;   /* aligne verticalement la checkbox et le texte */
     font-size: 14px;
     margin-bottom: 8px;
+    cursor: pointer;
+    color: black;
   }
+  
   
   .filters-price-range {
     padding: 10px 0;

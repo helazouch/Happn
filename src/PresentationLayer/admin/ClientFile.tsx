@@ -83,7 +83,18 @@ const ClientFile = () => {
               <EventCard
                 key={p.id}
                 image={p.paymentProofUrl || ""}
-                eventName={`${event.name}${versionName ? " - " + versionName : ""}`}
+                // eventName={`${event.name}${versionName ?  + versionName : ""}`}
+                eventName={
+                  <>
+                    {event.name}
+                    {versionName && (
+                      <>
+                        <span className="dash">-</span>
+                        {versionName}
+                      </>
+                    )}
+                  </>
+                }
                 onAccept={() => handleStatusChange(p.id||"", "confirmed")}
                 onReject={() => handleStatusChange(p.id||"", "cancelled")}
               />
