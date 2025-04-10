@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import ConfirmationModal from "./ConfirmationModal";
 import { Timestamp } from "firebase/firestore";
 import { Version } from "../../DataLayer/models/Version";
-import { useNavigationServiceAdminNavBar } from "../../RoutingLayer/navigation/NavigationServiceAdminNavBar";
 import "./AddEvent3.css";
 import "./ConfirmationModal.css";
 import { ServiceConnector } from "../../RoutingLayer/apiRoutes/eventRoute";
@@ -76,14 +75,14 @@ const AddEvent3: React.FC = () => {
       }));
     };
 
-  const handleCategoryChange = (category: string) => {
-    setVersionData((prev) => {
-      const newCategories = prev.categories?.includes(category)
-        ? prev.categories.filter((c) => c !== category)
-        : [...(prev.categories || []), category];
-      return { ...prev, categories: newCategories };
-    });
-  };
+    const handleCategoryChange = (category: string) => {
+      setVersionData((prev) => {
+        const newCategories = prev.categories?.includes(category)
+          ? prev.categories.filter((c) => c !== category)
+          : [...(prev.categories || []), category];
+        return { ...prev, categories: newCategories };
+      });
+    };
 
   const handleImageUpload = async (
     file: File,
