@@ -22,10 +22,10 @@ const AddEvent21: React.FC = () => {
 
     try {
       // Show confirmation dialog
-      const isConfirmed = window.confirm(
-        `Create new event?\n\nEvent: ${eventName}\nOrganizer: ${organizer}`
-      );
-      if (!isConfirmed) return;
+      // const isConfirmed = window.confirm(
+      //   `Create new event?\n\nEvent: ${eventName}\nOrganizer: ${organizer}`
+      // );
+      // if (!isConfirmed) return;
 
       // Create the event in database
       const eventId = await ServiceConnector.createEvent({

@@ -136,5 +136,33 @@ export const ParticipationRepository = {
     );
     const snapshot = await getDocs(q);
     return snapshot.size;
+  },
+
+
+
+  // Méthode pour récupérer le nombre de participants avec un statut différent de "cancelled"
+  async getParticipantsCountExcludingCancelled(eventId: string, versionId: string): Promise<number> {
+    try {
+      // Créer une requête pour récupérer les participations avec un statut différent de "cancelled"
+      const participationRef = collection(db, "participations");
+      const participationQuery = query(
+        participationRef,
+        where("eventId", "==", eventId),
+        where("versionId", "==", versionId),
+        where("status", "not-in", ["cancelled"])
+      );
+
+      const querySnapshot = await getDocs(participationQuery);
+
+      // Le nombre de participations restantes après filtrage
+      return querySnapshot.size;
+    } catch (error) {
+      console.error("Erreur lors de la récupération du nombre de participants:", error);
+      throw new Error("Impossible de récupérer le nombre de participants.");
+    }
   }
+
+
+
+
 };

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./PlanMedia.css";
-import { askGemini } from "../../ServiceLayer/externalServices/AIService.ts";
+import { askGemini1 } from "../../ServiceLayer/externalServices/AIService1.ts";
 import { useNavigationServiceAdminNavBar } from "../../RoutingLayer/navigation/NavigationServiceAdminNavBar.ts";
 import { VersionRepository } from "../../DataLayer/repositories/VersionRepository.ts";
 
@@ -25,7 +25,7 @@ const PlanMedia: React.FC = () => {
       }
 
       const question = "Give me a media plan";
-      const response = await askGemini(question, versionId);
+      const response = await askGemini1(question, versionId);
 
       setAiResponse(response);
       setMediaPlanContent(response); // ➕ On garde la réponse pour l’update

@@ -156,7 +156,7 @@ const AddEvent3: React.FC = () => {
         eventId,
         versionToCreate
       );
-      alert(` Version created successfully!\nVersion ID: ${versionId}`);
+      // alert(` Version created successfully!\nVersion ID: ${versionId}`);
       navigation.goToMediaPlan(versionId);
     } catch (err) {
       const errorMessage =
