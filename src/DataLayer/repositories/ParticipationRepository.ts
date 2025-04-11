@@ -149,7 +149,7 @@ export const ParticipationRepository = {
         participationRef,
         where("eventId", "==", eventId),
         where("versionId", "==", versionId),
-        where("status", "not-in", ["cancelled"])
+        where("status", "not-in", ["canceled"])
       );
 
       const querySnapshot = await getDocs(participationQuery);

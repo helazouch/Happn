@@ -179,25 +179,44 @@ export class FirebaseService {
   static async getVersionsByStatus(canceled: boolean): Promise<Version[]> {
     try {
       const versionsRef = collection(db, "versions");
+      console.log(`Fetching versions with canceled status: ${canceled}`); // Debug log
+      
       const q = query(versionsRef, where("canceled", "==", canceled));
-      
       const snapshot = await getDocs(q);
-      const now = new Date();
       
-      return snapshot.docs
-        .map(doc => ({
-          id_version: doc.id,
-          ...this.parseVersionData(doc.data())
-        }))
-        .filter(version => 
-          canceled || 
-          (version.date instanceof Date ? version.date : version.date.toDate()) >= now
-        );
+      // Debug: Log what we're actually getting from Firestore
+      console.log(`Found ${snapshot.size} documents`);
+      snapshot.forEach(doc => {
+        console.log(`Document ${doc.id}:`, {
+          ...doc.data(),
+          canceled: doc.data().canceled,
+          date: doc.data().date?.toDate?.() || doc.data().date
+        });
+      });
+  
+      // Parse all documents without filtering first
+      const allVersions = snapshot.docs.map(doc => ({
+        id_version: doc.id,
+        ...this.parseVersionData(doc.data())
+      }));
+  
+      console.log("Parsed versions:", allVersions); // Debug log
+  
+      // Only apply date filtering for non-canceled events
+      if (!canceled) {
+        const now = new Date();
+        return allVersions.filter(version => {
+          const versionDate = version.date instanceof Date ? version.date : version.date.toDate();
+          return versionDate >= now;
+        });
+      }
+  
+      return allVersions;
     } catch (error) {
       console.error("[EventService] Error fetching versions by status:", error);
       throw new Error(`Failed to fetch ${canceled ? 'canceled' : 'active'} versions`);
     }
-}
+  }
 
   private static parseVersionData(data: FirestoreVersionDocument): Omit<Version, 'id_version'> {
     const normalizeDate = (dateValue: Timestamp | Date | string | undefined): Date => {

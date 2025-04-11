@@ -191,23 +191,25 @@ const EventsPage = () => {
   // });
 
   const filteredEvents = events.filter((event) => {
-    const eventDate =
-      event.date instanceof Date ? event.date : event.date.toDate();
+    const eventDate = event.date instanceof Date ? event.date : event.date.toDate();
   
-    // Filtrer les événements annulés ici si nécessaire
-    if (event.canceled) {
-      return false;
+    // 1. Apply status filter (if not "all")
+    if (statusFilter === "active" && event.canceled) {
+      return false; // Skip canceled events in "active" mode
+    }
+    if (statusFilter === "canceled" && !event.canceled) {
+      return false; // Skip non-canceled events in "canceled" mode
     }
   
+    // 2. Apply other filters (weekday, category, price)
     const matchesWeekday =
       filters.weekdays === "Any" ||
-      eventDate.toLocaleString("en-US", { weekday: "long" }) ===
-        filters.weekdays;
+      eventDate.toLocaleString("en-US", { weekday: "long" }) === filters.weekdays;
+    
     const matchesCategory =
       filters.categories.length === 0 ||
-      filters.categories.some((category) =>
-        event.categories?.includes(category)
-      );
+      filters.categories.some((category) => event.categories?.includes(category));
+    
     const matchesPrice =
       event.price >= filters.priceRange[0] && event.price <= filters.priceRange[1];
   
